@@ -21,7 +21,7 @@ namespace adminlte.Models
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
+            : base("AuditCompliance", throwIfV1Schema: false)
         {
         }
 
