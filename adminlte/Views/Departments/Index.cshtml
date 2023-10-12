@@ -1,0 +1,202 @@
+﻿@model IEnumerable<adminlte.Models.Department>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            DEPARTMENT
+            <small>Details</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Department</a></li>
+            <li><a href="#">Details</a></li>
+            <li class="active">Details</li>
+        </ol>
+    </section>
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box">
+                    <!-- /.box-header -->
+                    <div class="box-header">
+                        <div class="col-lg-10">
+
+                        </div>
+                        <div class="col-lg-2">
+                            <a class="btn btn-block btn-social btn-linkedin" style="text-align:right" onclick="OpenAddModal()">
+                                <i class="fa fa-plus"></i> Create
+                            </a>
+                        </div>
+
+                        @* <div class="col-md-3 col-sm-4"><i class="fa fa-fw fa-plus" onclick="redirectToAddPage"></i> New Department</div>*@
+                    </div>
+                    <div class="box-body">
+                        <table id="Department" class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Primary</th>
+                                    <th>Action</th>
+                                    @*<th>Platform(s)</th>
+                                        <th>Engine version</th>
+                                        <th>CSS grade</th>*@
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.DepartmentName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.IsPrimary)
+                                        </td>
+                                        <td>
+                                            <i class="fa fa-fw fa-edit" onclick="editDepartment(@item.DepartmentID)"></i>
+                                            @*@Html.ActionLink("Edit", "Edit", new { id = item.DepartmentID }) |
+                                            @Html.ActionLink("Delete", "Delete", new { id = item.DepartmentID })*@
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                            @*<tfoot>
+                                    <tr>
+                                        <th>Rendering engine</th>
+                                        <th>Browser</th>
+                                        <th>Platform(s)</th>
+                                        <th>Engine version</th>
+                                        <th>CSS grade</th>
+                                    </tr>
+                                </tfoot>*@
+                        </table>
+                    </div>
+
+                    <div class="modal fade" id="modal-default">
+                        <div class="modal-dialog" style="width: 500px !important">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    <h4 class="modal-title" id="ModalTitle">Add</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="Create">
+                                        <div class="form-group">
+                                            <input type="hidden" id="ID" value="" >
+                                            @*<label>Department Name</label>*@
+                                            <input type="text" name="DepartmentName" id="DepartmentName" class="form-control" placeholder="Department Name">
+                                        </div>
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" value="false" name="IsPrimary" id="IsPrimary"> Department is primary?
+                                            </label>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary" onclick="SaveData()">Save changes</button>
+                                </div>
+                            </div>
+                            <!-- /.modal-content -->
+                        </div>
+                        <!-- /.modal-dialog -->
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+@section Scripts
+{
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#example1').DataTable()
+            $('#example2').DataTable({
+                'paging': true,
+                'lengthChange': false,
+                'searching': false,
+                'ordering': true,
+                'info': true,
+                'autoWidth': false
+            })
+        });
+        function SaveData() {
+            var formData = {
+                DepartmentName: $('#DepartmentName').val(),
+                IsPrimary: $('#IsPrimary').val()
+            };
+            $.ajax({
+                type: 'POST',
+                url: '/Departments/Create',
+                data: formData,
+                success: function (response) {
+                    if (response.success) {
+                        toastr.success("Department Added Succesfully");
+                    }
+                    else {
+                        toastr.error("Unexpected error has occured");
+                    }
+                },
+                error: function (xhr, status, error) {
+
+                    toastr.error("Unexpected error has occured");
+                }
+            });
+        }
+        function editDepartment(data) {
+            $.ajax({
+                type: 'GET',
+                url: '/Departments/Edit',
+                data: { id: data },
+                success: function (response) {
+                    if (response.success) {
+                        toastr.success("Department data loaded Succesfully");
+                        OpenEditModal(response.data);
+                    }
+                    else {
+                        toastr.error("Unexpected error has occured");
+                    }
+                },
+                error: function (xhr, status, error) {
+
+                    toastr.error("Unexpected error has occured");
+                }
+            });
+        }
+        function OpenAddModal() {
+            $("#ModalTitle").val("Add");
+            $("#DepartmentName").val("");
+            $("#IsPrimary").prop('checked', false);
+            $('#modal-default').modal('show');
+        }
+        function OpenEditModal(data) {
+            $("#ModalTitle").val("Edit");
+            $("#DepartmentName").val(data.DepartmentName);
+            $("#IsPrimary").prop('checked', data.IsPrimary);
+            $("#ID").val(data);
+            $('#modal-default').modal('show');
+        }
+    </script>
+
+}

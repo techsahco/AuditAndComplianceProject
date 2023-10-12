@@ -9,10 +9,13 @@ namespace adminlte.Models
     [Table("Department")]
     public partial class Department
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int DepartmentID { get; set; }
 
         [StringLength(100)]
         public string DepartmentName { get; set; }
+        public bool IsPrimary { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public DateTime ModifiedOn { get; set; }
     }
 }

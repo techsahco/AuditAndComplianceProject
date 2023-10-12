@@ -9,7 +9,7 @@
             </div>
             <div class="pull-left info">
                 <p>Alexander Pierce</p>
-                <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+                @*<a href="#"><i class="fa fa-circle text-success"></i> Online</a>*@
             </div>
         </div>
         <!-- search form -->
@@ -36,7 +36,7 @@
                 </a>
                 <ul class="treeview-menu">
                     <li class="@Html.IsSelected(action: "Dashboardv1")"><a href="@Url.Action("Dashboardv1", "Dashboard")"><i class="fa fa-circle-o"></i> Dashboard v1</a></li>
-                    <li class="@Html.IsSelected(action: "Dashboardv2")"><a href="@Url.Action("Dashboardv2", "Dashboard")"><i class="fa fa-circle-o"></i> Dashboard v2</a></li>
+                    @*<li class="@Html.IsSelected(action: "Dashboardv2")"><a href="@Url.Action("Dashboardv2", "Dashboard")"><i class="fa fa-circle-o"></i> Dashboard v2</a></li>*@
                 </ul>
             </li>
             <li class="@Html.IsSelected(controller: "Layout") treeview">

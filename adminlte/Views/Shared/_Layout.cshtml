@@ -7,15 +7,39 @@
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <title>@ViewBag.Title - My ASP.NET Application</title>
     @Styles.Render("~/Content/css")
+    <!-- Add Toastr.css for styles -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
 
     <!-- Google Font -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
     @if (IsSectionDefined("Styles"))
     {@RenderSection("Styles", required: false)}
+    <style>
+        .toast-middle {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        #toast-container > div {
+            width: 350px !important;
+            opacity: 1 !important;
+            padding: 20px 20px 20px 25px !important;
+            webkit-box-shadow:none !important;
+        }
+        #toast-container > .toast-info {
+            background-image: none !important;
+        }
+    </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 
     <div class="wrapper">
+
+        <div id="confirmation-popup" style="display: none;">
+            <p style="margin-bottom:5px">Are you sure you want to perform this action?</p>
+            <button id="confirm-action" class="btn btn-success">Confirm</button>
+            <button id="cancel-action" class="btn btn-danger">Cancel</button>
+        </div>
 
         @Html.Partial("_Header")
 
@@ -36,6 +60,42 @@
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/lib")
+
+    <!-- Add Toastr.js for functionality -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     @RenderSection("scripts", required: false)
+    <script>
+        $(document).ready(function () {
+            toastr.options = {
+                "closeButton": true,
+                "positionClass": "toast-top-right",
+            }
+        });
+
+        // Display the confirmation popup
+        function showConfirmationPopup() {
+            toastr.info('<div><center><b>Are you sure?</b></center> <br/><center>Are you sure you want to perform this action?</center></div><div style="padding-top:15px !important;display:flex;justify-content:center"><button id="confirm-action" class="btn btn-success" style="margin-right: 10px;">Confirm</button><button id="cancel-action" class="btn btn-danger">Cancel</button></div>', '', {
+                closeButton: false,
+                timeOut: 0,
+                extendedTimeOut: 0,
+                tapToDismiss: false,
+                progressBar: false,
+                positionClass: "toast-middle",
+                onShown: function () {
+                    // Attach event handlers to the buttons
+                    $('#confirm-action').click(function () {
+                        // User confirmed the action
+                        toastr.clear();
+                        // Add your action to perform on confirmation here
+                    });
+                    $('#cancel-action').click(function () {
+                        // User canceled the action
+                        toastr.clear();
+                        // Add your action to perform on cancellation here
+                    });
+                },
+            });
+        }
+    </script>
 </body>
 </html>
