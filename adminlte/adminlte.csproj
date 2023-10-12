@@ -4229,6 +4229,7 @@
     <Content Include="Scripts\adminlte\components\ckeditor\skins\moono-lisa\readme.md" />
     <Content Include="Scripts\adminlte\components\ckeditor\skins\moono\readme.md" />
     <Content Include="README.md" />
+    <Content Include="Views\Shared\_LayoutAmdin.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202310041609392_InitialIdentity.resx">

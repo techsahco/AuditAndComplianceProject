@@ -9,6 +9,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using adminlte.Models;
+using System.Web.Security;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace adminlte.Controllers
 {
@@ -17,12 +19,13 @@ namespace adminlte.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private ApplicationRoleManager _roleManager;
 
         public AccountController()
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -52,6 +55,19 @@ namespace adminlte.Controllers
             }
         }
 
+        public ApplicationRoleManager RoleManager
+        {
+            get
+            {
+                return _roleManager ?? HttpContext.GetOwinContext().Get<ApplicationRoleManager>();
+            }
+
+            private set
+            {
+                _roleManager = value;
+            }
+        }
+
         //
         // GET: /Account/Login
         [AllowAnonymous]
@@ -73,12 +89,33 @@ namespace adminlte.Controllers
                 return View(model);
             }
 
-            // This doesn't count login failures towards account lockout
-            // To enable password failures to trigger account lockout, change to shouldLockout: true
             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+
             switch (result)
             {
                 case SignInStatus.Success:
+                    var user = await UserManager.FindByNameAsync(model.Email);
+
+                    if (user != null)
+                    {
+                        var userRole = await UserManager.GetRolesAsync(user.Id);
+                        var role = userRole.FirstOrDefault(); // Assuming the user has only one role
+
+                        // Create and set cookies with user login details.
+                        var authTicket = new FormsAuthenticationTicket(
+                            1,
+                            model.Email,  // User's username or email
+                            DateTime.Now,
+                            DateTime.Now.AddMinutes(30),  // Adjust the expiration time as needed
+                            model.RememberMe,   // Remember user (based on RememberMe checkbox)
+                            role // Save the user's role in the authentication ticket
+                        );
+
+                        var encryptedTicket = FormsAuthentication.Encrypt(authTicket);
+                        var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
+                        Response.Cookies.Add(authCookie);
+                    }
+
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -155,20 +192,37 @@ namespace adminlte.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
-                    // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
-                    // Send an email with this link
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                    // Find the role you want to assign (e.g., "Admin")
+                    var role = await RoleManager.FindByNameAsync("Admin");
 
-                    return RedirectToAction("Index", "Home");
+                    if (role != null)
+                    {
+                        // Assign the role to the user
+                        var roleResult = await UserManager.AddToRoleAsync(user.Id, role.Name);
+
+                        if (roleResult.Succeeded)
+                        {
+                            await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                            // User successfully registered
+                            ViewBag.RegisterSuccess = true; // Set a flag
+                            return RedirectToAction("Index", "Home");
+                        }
+                        else
+                        {
+                            // Handle role assignment error
+                            ModelState.AddModelError(string.Empty, "Error assigning role to the user.");
+                        }
+                    }
+                    else
+                    {
+                        // Handle role not found error
+                        ModelState.AddModelError(string.Empty, "Selected role not found.");
+                    }
                 }
                 AddErrors(result);
             }
 
-            // If we got this far, something failed, redisplay form
+            // If we got this far, something failed, redisplay the form
             return View(model);
         }
 
