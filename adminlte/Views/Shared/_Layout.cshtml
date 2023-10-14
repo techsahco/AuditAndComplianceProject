@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@{ 
+    var user = User.Identity;
+}
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -79,8 +82,15 @@
         </div>
 
         @Html.Partial("_Header")
-
-        @Html.Partial("_SidebarUser") @*@Html.Partial("_Sidebar")*@
+        @if (User.IsInRole("Admin"))
+        {
+            @Html.Partial("_SidebarAdmin")
+        }
+        @if (User.IsInRole("User"))
+        {
+            @Html.Partial("_SidebarUser")
+        }
+        @*@Html.Partial("_Sidebar")*@
 
         @RenderBody()
 

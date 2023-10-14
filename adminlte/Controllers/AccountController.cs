@@ -451,6 +451,7 @@ namespace adminlte.Controllers
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             System.Web.Security.FormsAuthentication.SignOut();
 
+            Response.Cookies[FormsAuthentication.FormsCookieName].Expires = DateTime.Now.AddDays(-1);
             // Clear any other cookies you want to remove
             Response.Cookies.Clear(); // This clears all cookies
             return Json(new { success = true }, JsonRequestBehavior.AllowGet);
