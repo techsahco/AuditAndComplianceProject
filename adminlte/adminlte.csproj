@@ -4236,6 +4236,8 @@
     <Content Include="Views\Departments\Edit.cshtml" />
     <Content Include="Views\Departments\Index.cshtml" />
     <Content Include="Views\Shared\_LayoutAmdin.cshtml" />
+    <Content Include="Views\Shared\_SidebarAdmin.cshtml" />
+    <Content Include="Views\Shared\_sidebarUser.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202310041609392_InitialIdentity.resx">

@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title - Audit Compliance IMC</title>
     @Styles.Render("~/Content/css")
     <!-- Add Toastr.css for styles -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
@@ -43,7 +43,7 @@
 
         @Html.Partial("_Header")
 
-        @Html.Partial("_Sidebar")
+        @Html.Partial("_SidebarUser") @*@Html.Partial("_Sidebar")*@
 
         @RenderBody()
 
@@ -70,6 +70,8 @@
                 "closeButton": true,
                 "positionClass": "toast-top-right",
             }
+            var userRole = getUserRole();
+            getUserName(userRole);
         });
 
         // Display the confirmation popup
@@ -96,6 +98,49 @@
                 },
             });
         }
+
+        // Get UserRole from cookie
+        function getUserRole() {
+            debugger;
+            var authCookie = document.cookie
+                .split('; ')
+                .find(row => row.startsWith('@FormsAuthentication.FormsCookieName='));
+
+            if (authCookie) {
+                var cookieValue = authCookie.split('=')[1];
+                // Decode the base64 encoded authentication ticket
+                var decodedValue = atob(cookieValue);
+                // Parse the JSON string in the authentication ticket
+                var authTicket = JSON.parse(decodedValue);
+                var userRole = authTicket.UserData;
+
+                // Now, you have the user role in the 'userRole' variable, and you can use it as needed.
+                // For example, you can conditionally show/hide elements based on the user's role.
+                if (userRole === 'Admin') {
+                    // User is an admin, do something
+                    console.log('User Role: ' + userRole);
+                    return authTicket;
+                    console.log('User Role: ' + userRole);
+                } else if (userRole === 'User') {
+                    // User is a regular user, do something else
+                    console.log('User Role: ' + userRole);
+                    return authTicket;
+                }
+            }
+            return null;
+        }
+
+        //Get UserName
+        function getUserName(userRole) {
+            debugger;
+            // Get user details from the cookie and update the user name in the sidebar
+            if (userRole && userRole.Name) {
+                document.getElementById('user-name').textContent = userRole.Name; 
+                document.getElementById('user-name-notification').textContent = userRole.Name;
+                document.getElementById('user-name-notification-inner').textContent = userRole.Name;
+            }
+        }
+
     </script>
 </body>
 </html>

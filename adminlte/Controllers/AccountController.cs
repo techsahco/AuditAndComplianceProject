@@ -11,6 +11,8 @@ using Microsoft.Owin.Security;
 using adminlte.Models;
 using System.Web.Security;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Newtonsoft.Json;
+using System.Text;
 
 namespace adminlte.Controllers
 {
@@ -110,9 +112,11 @@ namespace adminlte.Controllers
                             model.RememberMe,   // Remember user (based on RememberMe checkbox)
                             role // Save the user's role in the authentication ticket
                         );
-
-                        var encryptedTicket = FormsAuthentication.Encrypt(authTicket);
-                        var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
+                        // Serialize the authentication ticket to a JSON string
+                        string ticketData = JsonConvert.SerializeObject(authTicket);
+                //        var encryptedTicket = FormsAuthentication.Encrypt(authTicket);
+                ///        var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
+                        var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, Convert.ToBase64String(Encoding.UTF8.GetBytes(ticketData)));
                         Response.Cookies.Add(authCookie);
                     }
 
