@@ -49,11 +49,16 @@ namespace adminlte.Controllers
         {
             if (ModelState.IsValid)
             {
-                department.CreatedOn = DateTime.Now;
-                department.ModifiedOn = DateTime.Now;
-                db.Departments.Add(department);
-                db.SaveChanges();
-                return Json(new { success = true }, JsonRequestBehavior.AllowGet);
+                var isExist = db.Departments.Where(x => x.DepartmentName == department.DepartmentName).FirstOrDefault();
+                if (isExist == null)
+                {
+                    department.CreatedOn = DateTime.Now;
+                    department.ModifiedOn = DateTime.Now;
+                    db.Departments.Add(department);
+                    db.SaveChanges();
+                    return Json(new { success = true }, JsonRequestBehavior.AllowGet);
+                }
+                return Json(new { success = false ,errorMesage = "Same Name already exist"}, JsonRequestBehavior.AllowGet);
             }
 
             return Json(new { success = false }, JsonRequestBehavior.AllowGet);
@@ -78,16 +83,30 @@ namespace adminlte.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "DepartmentID,DepartmentName")] Department department)
+        public ActionResult Edit(Department department)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(department).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                Department dep = db.Departments.Find(department.DepartmentID);
+                if (dep == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                else
+                {
+                    var isExist = db.Departments.Where(x => x.DepartmentName == department.DepartmentName && x.DepartmentID != department.DepartmentID).FirstOrDefault();
+                    if (isExist == null)
+                    {
+                        dep.ModifiedOn = DateTime.Now;
+                        dep.DepartmentName = department.DepartmentName;
+                        dep.IsPrimary = department.IsPrimary;
+                        db.SaveChanges();
+                        return Json(new { success = true }, JsonRequestBehavior.AllowGet);
+                    }
+                    return Json(new { success = false, errorMesage = "Same Name already exist" }, JsonRequestBehavior.AllowGet);
+                }
             }
-            return View(department);
+            return Json(new { success = false }, JsonRequestBehavior.AllowGet);
         }
 
         // GET: Departments/Delete/5
@@ -107,13 +126,24 @@ namespace adminlte.Controllers
 
         // POST: Departments/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Department department = db.Departments.Find(id);
-            db.Departments.Remove(department);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            try
+            {
+                Department department = db.Departments.Find(id);
+                if (department != null)
+                {
+                    db.Departments.Remove(department);
+                    db.SaveChanges();
+                    return Json(new { success = true }, JsonRequestBehavior.AllowGet);
+                }
+                return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+            }
+            catch
+            {
+
+                return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+            }
         }
 
         protected override void Dispose(bool disposing)
