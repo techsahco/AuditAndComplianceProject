@@ -15,30 +15,67 @@
     @if (IsSectionDefined("Styles"))
     {@RenderSection("Styles", required: false)}
     <style>
-        .toast-middle {
+        /* CSS for the overlay */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+        }
+
+        /* CSS for the popup */
+        .popup {
+            width: 25%;
+            position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
         }
-        #toast-container > div {
-            width: 350px !important;
-            opacity: 1 !important;
-            padding: 20px 20px 20px 25px !important;
-            webkit-box-shadow:none !important;
+
+        /* CSS for the buttons */
+        .popup-button {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px 20px;
+            background-color: #0074d9;
+            color: white;
+            border: none;
+            cursor: pointer;
         }
-        #toast-container > .toast-info {
-            background-image: none !important;
+        .popup-button-cancel {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px 20px;
+            background-color: #f51d53;
+            color: white;
+            border: none;
+            cursor: pointer;
         }
     </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 
     <div class="wrapper">
-
-        <div id="confirmation-popup" style="display: none;">
-            <p style="margin-bottom:5px">Are you sure you want to perform this action?</p>
-            <button id="confirm-action" class="btn btn-success">Confirm</button>
-            <button id="cancel-action" class="btn btn-danger">Cancel</button>
+        <div class="overlay" id="confirmation-popup">
+            <div class="popup col-md-4">
+                <div style="display:flex;justify-content:center">
+                    <img src="~/Content/thinking.png" width="50" />
+                </div>
+                <h4 style="text-align:center;padding-top: 10px;"><b>ARE YOU SURE?</b></h4>
+                <div style="display:flex;justify-content:center">
+                    <button class="popup-button" onclick="confirmAction()">YES</button>
+                    <button class="popup-button-cancel" onclick="closePopup()">NO</button>
+                </div>
+            </div>
         </div>
 
         @Html.Partial("_Header")
@@ -51,7 +88,7 @@
 
         @Html.Partial("_Aside")
         <!-- Add the sidebar's background. This div must be placed
-        immediately after the control sidebar -->
+    immediately after the control sidebar -->
         <div class="control-sidebar-bg"></div>
     </div>
 
@@ -74,28 +111,25 @@
             getUserName(userRole);
         });
 
-        // Display the confirmation popup
-        function showConfirmationPopup() {
-            toastr.info('<div><center><b>Are you sure?</b></center> <br/><center>Are you sure you want to perform this action?</center></div><div style="padding-top:15px !important;display:flex;justify-content:center"><button id="confirm-action" class="btn btn-success" style="margin-right: 10px;">Confirm</button><button id="cancel-action" class="btn btn-danger">Cancel</button></div>', '', {
-                closeButton: false,
-                timeOut: 0,
-                extendedTimeOut: 0,
-                tapToDismiss: false,
-                progressBar: false,
-                positionClass: "toast-middle",
-                onShown: function () {
-                    // Attach event handlers to the buttons
-                    $('#confirm-action').click(function () {
-                        // User confirmed the action
-                        toastr.clear();
-                        // Add your action to perform on confirmation here
-                    });
-                    $('#cancel-action').click(function () {
-                        // User canceled the action
-                        toastr.clear();
-                        // Add your action to perform on cancellation here
-                    });
+        function showPopup() {
+            document.getElementById("confirmation-popup").style.display = "block";
+        }
+
+        function closePopup() {
+            document.getElementById("confirmation-popup").style.display = "none";
+        }
+        function Logout() {
+            
+            $.ajax({
+                type: 'POST',
+                url: '/Account/LogOff',
+                success: function (response) {
+                    window.location.href = "/Account/Login";
                 },
+                error: function (xhr, status, error) {
+
+                    toastr.error("Unexpected error has occured");
+                }
             });
         }
 
@@ -140,7 +174,6 @@
                 document.getElementById('user-name-notification-inner').textContent = userRole.Name;
             }
         }
-
     </script>
 </body>
 </html>

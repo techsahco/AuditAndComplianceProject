@@ -446,11 +446,14 @@ namespace adminlte.Controllers
         //
         // POST: /Account/LogOff
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("Index", "Home");
+            System.Web.Security.FormsAuthentication.SignOut();
+
+            // Clear any other cookies you want to remove
+            Response.Cookies.Clear(); // This clears all cookies
+            return Json(new { success = true }, JsonRequestBehavior.AllowGet);
         }
 
         //
