@@ -60,17 +60,22 @@
                     <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
                     @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger" })
                 </div>
+
                 <div class="row" style="display: flex; justify-content: center; margin-bottom: 6px;">
-                    <!-- /.col -->
-                    <div class="col-xs-4">
-                        <button type="submit" class="btn btn-primary btn-block btn-flat">Register</button>
+
+                    <div class="row" style="margin-top:10px">
+                        <div class="col-xs-6">
+                            <a href="@Url.Action("Login", "Account")" class="text-center">back to Login?</a>
+                        </div>
+
+                        <!-- /.col -->
+                        <div class="col-xs-6">
+                            <button type="submit" class="btn btn-primary btn-block btn-flat">Register</button>
+                        </div>
+                        <!-- /.col -->
                     </div>
-                    <!-- /.col -->
-                </div>
+             </div>
             }
-            <div class="row" style="display: flex; justify-content: center;">
-                <a href="@Url.Action("Login", "Account")" class="text-center">I already have a membership</a>
-            </div>
     </div>
     <!-- /.register-box -->
     <!-- jQuery 3 -->
