@@ -9,7 +9,7 @@ namespace adminlte.Models
     [Table("RiskItem")]
     public partial class RiskItem
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int RiskItemID { get; set; }
 
         [StringLength(255)]
@@ -17,5 +17,7 @@ namespace adminlte.Models
 
         [StringLength(20)]
         public string Priority { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public DateTime ModifiedOn { get; set; }
     }
 }

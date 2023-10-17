@@ -46,6 +46,14 @@
                 </span>*@
             </a>
         </li>
+        <li class="@Html.IsSelected(controller: "RiskItem")">
+            <a href="@Url.Action("Index", "RiskItem")">
+                <i class="fa fa-th"></i> <span>Risk Category</span>
+                @*<span class="pull-right-container">
+                    <small class="label pull-right bg-green">new</small>
+                </span>*@
+            </a>
+        </li>
     </ul>
     </section>
     <!-- /.sidebar -->

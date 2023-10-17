@@ -173,6 +173,7 @@
     <Compile Include="Controllers\CalendarController.cs" />
     <Compile Include="Controllers\ChartsController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
+    <Compile Include="Controllers\RiskItemController.cs" />
     <Compile Include="Controllers\DepartmentsController.cs" />
     <Compile Include="Controllers\ExamplesController.cs" />
     <Compile Include="Controllers\FormsController.cs" />
@@ -4238,6 +4239,11 @@
     <Content Include="Views\Shared\_LayoutAmdin.cshtml" />
     <Content Include="Views\Shared\_SidebarAdmin.cshtml" />
     <Content Include="Views\Shared\_sidebarUser.cshtml" />
+    <Content Include="Views\RiskItem\Create.cshtml" />
+    <Content Include="Views\RiskItem\Delete.cshtml" />
+    <Content Include="Views\RiskItem\Details.cshtml" />
+    <Content Include="Views\RiskItem\Edit.cshtml" />
+    <Content Include="Views\RiskItem\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202310041609392_InitialIdentity.resx">
