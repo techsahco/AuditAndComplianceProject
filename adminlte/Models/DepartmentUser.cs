@@ -6,10 +6,12 @@ namespace adminlte.Models
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    public partial class Category
+    [Table("DepartmentUser")]
+    public partial class DepartmentUser
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int CategoryID { get; set; }
-        public string CategoryName { get; set; }
+        [Key, Column(Order = 0)]
+        public int DepartmentID { get; set; }
+        [Key, Column(Order = 1)]
+        public string UserId { get; set; }
     }
 }

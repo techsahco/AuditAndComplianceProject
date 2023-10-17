@@ -29,5 +29,6 @@ namespace adminlte.Models
         {
             return new ApplicationDbContext();
         }
+
     }
 }
