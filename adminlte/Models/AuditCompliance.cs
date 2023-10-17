@@ -14,6 +14,7 @@ namespace adminlte.Models
 
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Department> Departments { get; set; }
+        public virtual DbSet<DepartmentUser> DepartmentUser { get; set; }
         public virtual DbSet<RiskItem> RiskItems { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

@@ -232,14 +232,14 @@
             showPopup();
         }
         function OpenAddModal() {
-            $("#ModalTitle").text("Add");
+            $("#ModalTitle").val("Add");
             $("#DepartmentName").val("");
             $("#IsPrimary").prop('checked', false);
             $('#modal-default').modal('show');
             isEdit = false;
         }
         function OpenEditModal(data) {
-            $("#ModalTitle").text("Edit");
+            $("#ModalTitle").val("Edit");
             $("#DepartmentName").val("");
             $("#IsPrimary").prop('checked', false);
             $("#DepartmentName").val(data.DepartmentName);

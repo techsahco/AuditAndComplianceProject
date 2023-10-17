@@ -1,4 +1,4 @@
-﻿@model IEnumerable<adminlte.Models.Department>
+﻿@model IEnumerable<adminlte.Models.Category>
 
 @{
     ViewBag.Title = "Index";
@@ -13,11 +13,11 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            DEPARTMENT
+            Categories
             <small>Details</small>
         </h1>
         <ol class="breadcrumb">
-            <li><a href="#"><i class="fa fa-dashboard"></i> Department</a></li>
+            <li><a href="#"><i class="fa fa-dashboard"></i> Categories</a></li>
             <li><a href="#">Details</a></li>
             <li class="active">Details</li>
         </ol>
@@ -45,7 +45,6 @@
                             <thead>
                                 <tr>
                                     <th>Name</th>
-                                    <th>Primary</th>
                                     <th>Action</th>
                                     @*<th>Platform(s)</th>
                                         <th>Engine version</th>
@@ -57,14 +56,11 @@
                                 {
                                     <tr>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.DepartmentName)
+                                            @Html.DisplayFor(modelItem => item.CategoryName)
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.IsPrimary)
-                                        </td>
-                                        <td>
-                                            <i class="fa fa-fw fa-edit" style="color:cadetblue" onclick="editDepartment(@item.DepartmentID)"></i>
-                                            <i class="fa fa-fw fa-trash" style="color:red" onclick="deleteDepartment(@item.DepartmentID)"></i>
+                                            <i class="fa fa-fw fa-edit" style="color:cadetblue" onclick="editDepartment(@item.CategoryID)"></i>
+                                            <i class="fa fa-fw fa-trash" style="color:red" onclick="deleteDepartment(@item.CategoryID)"></i>
                                             @*@Html.ActionLink("Edit", "Edit", new { id = item.DepartmentID }) |
                                                 @Html.ActionLink("Delete", "Delete", new { id = item.DepartmentID })*@
                                         </td>
@@ -96,13 +92,8 @@
                                     <form id="Create">
                                         <div class="form-group">
                                             <input type="hidden" id="ID" value="">
-                                            @*<label>Department Name</label>*@
-                                            <input type="text" name="DepartmentName" id="DepartmentName" class="form-control" placeholder="Department Name">
-                                        </div>
-                                        <div class="checkbox">
-                                            <label>
-                                                <input type="checkbox" value="false" name="IsPrimary" id="IsPrimary"> Department is primary?
-                                            </label>
+                                            <label>Category Name</label>
+                                            <input type="text" name="CategoryName" id="CategoryName" class="form-control" placeholder="Category Name">
                                         </div>
                                     </form>
                                 </div>
@@ -146,16 +137,15 @@
         function SaveData() {
             if (isEdit == false) {
                 var formData = {
-                    DepartmentName: $('#DepartmentName').val(),
-                    IsPrimary: $("#IsPrimary").prop('checked')
+                    CategoryName: $('#CategoryName').val(),
                 };
                 $.ajax({
                     type: 'POST',
-                    url: '/Departments/Create',
+                    url: '/Categories/Create',
                     data: formData,
                     success: function (response) {
                         if (response.success) {
-                            toastr.success("Department Added Succesfully");
+                            toastr.success("Category Added Succesfully");
                             window.setTimeout(function () {
                                 location.reload();
                             }, 1000);
@@ -176,17 +166,16 @@
             }
             else {
                 var formData = {
-                    DepartmentName: $('#DepartmentName').val(),
-                    IsPrimary: $("#IsPrimary").prop('checked'),
-                    DepartmentID: $("#ID").val()
+                    CategoryName: $('#CategoryName').val(),
+                    CategoryID: $("#ID").val()
                 };
                 $.ajax({
                     type: 'POST',
-                    url: '/Departments/Edit',
+                    url: '/Categories/Edit',
                     data: formData,
                     success: function (response) {
                         if (response.success) {
-                            toastr.success("Department Updated Succesfully");
+                            toastr.success("Category Updated Succesfully");
                             window.setTimeout(function () {
                                 location.reload();
                             }, 1000);
@@ -209,7 +198,7 @@
         function editDepartment(data) {
             $.ajax({
                 type: 'GET',
-                url: '/Departments/Edit',
+                url: '/Categories/Edit',
                 data: { id: data },
                 success: function (response) {
                     if (response.success) {
@@ -233,18 +222,15 @@
         }
         function OpenAddModal() {
             $("#ModalTitle").text("Add");
-            $("#DepartmentName").val("");
-            $("#IsPrimary").prop('checked', false);
+            $("#CategoryName").val("");
             $('#modal-default').modal('show');
             isEdit = false;
         }
         function OpenEditModal(data) {
             $("#ModalTitle").text("Edit");
-            $("#DepartmentName").val("");
-            $("#IsPrimary").prop('checked', false);
-            $("#DepartmentName").val(data.DepartmentName);
-            $("#IsPrimary").prop('checked', data.IsPrimary);
-            $("#ID").val(data.DepartmentID);
+            $("#CategoryName").val("");
+            $("#CategoryName").val(data.CategoryName);
+            $("#ID").val(data.CategoryID);
             $('#modal-default').modal('show');
             isEdit = true;
         }
@@ -252,7 +238,7 @@
            //delete
             $.ajax({
                 type: 'POST',
-                url: '/Departments/Delete',
+                url: '/Categories/Delete',
                 data: { id: deleteID },
                 success: function (response) {
                     if (response.success) {
