@@ -4,6 +4,28 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
+@functions {
+    public string MapPriority(string priority)
+    {
+        if (priority == "1")
+        {
+            return "High";
+        }
+        else if (priority == "2")
+        {
+            return "Medium";
+        }
+        else if (priority == "3")
+        {
+            return "Low";
+        }
+        else
+        {
+            return priority; // Handle other cases if necessary
+        }
+    }
+}
 <style>
     .fa {
         font-size: 18px !important;
@@ -60,7 +82,7 @@
                                             @Html.DisplayFor(modelItem => item.RiskItemName)
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.Priority)
+                                            @MapPriority(item.Priority)
                                         </td>
                                         <td>
                                             <i class="fa fa-fw fa-edit" style="color:cadetblue" onclick="editRiskItem(@item.RiskItemID)"></i>
@@ -236,14 +258,14 @@
             showPopup();
         }
         function OpenAddModal() {
-            $("#ModalTitle").val("Add");
+            $("#ModalTitle").text("Add");
             $("#RiskItemName").val("");
             $("#Priority").prop('checked', false);
             $('#modal-default').modal('show');
             isEdit = false;
         }
         function OpenEditModal(data) {
-            $("#ModalTitle").val("Edit");
+            $("#ModalTitle").text("Edit");
             $("#RiskItemName").val("");
             $("#Priority").prop('checked', false);
             $("#RiskItemName").val(data.RiskItemName);
