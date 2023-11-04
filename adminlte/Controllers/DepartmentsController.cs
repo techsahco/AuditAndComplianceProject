@@ -19,7 +19,12 @@ namespace adminlte.Controllers
         {
             return View(db.Departments.ToList());
         }
-
+        [HttpGet]
+        public ActionResult GetDepartments()
+        {
+            var departs = db.Departments.ToList();
+            return Json(new { success = true,data = departs }, JsonRequestBehavior.AllowGet);
+        }
         // GET: Departments/Details/5
         public ActionResult Details(int? id)
         {

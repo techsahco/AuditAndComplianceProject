@@ -1,4 +1,4 @@
-﻿@model IEnumerable<adminlte.Models.Department>
+﻿    @model IEnumerable<adminlte.ViewModels.DepartmentUserViewModel>
 
 @{
     ViewBag.Title = "Index";
@@ -13,12 +13,12 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            DEPARTMENT
+            DEPARTMENT USER
             <small>Details</small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> Department</a></li>
-            <li><a href="#">Details</a></li>
+            <li><a href="#">Department Users</a></li>
             <li class="active">Details</li>
         </ol>
     </section>
@@ -44,8 +44,8 @@
                         <table id="Department" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
-                                    <th>Name</th>
-                                    <th>Primary</th>
+                                    <th>User</th>
+                                    <th>Department</th>
                                     <th>Action</th>
                                     @*<th>Platform(s)</th>
                                         <th>Engine version</th>
@@ -57,10 +57,10 @@
                                 {
                                     <tr>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.DepartmentName)
+                                            @Html.DisplayFor(modelItem => item.UserName)
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.IsPrimary)
+                                            @Html.DisplayFor(modelItem => item.DepartmentName)
                                         </td>
                                         <td>
                                             <i class="fa fa-fw fa-edit" style="color:cadetblue" onclick="editDepartment(@item.DepartmentID)"></i>

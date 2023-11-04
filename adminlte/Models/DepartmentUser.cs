@@ -13,5 +13,8 @@ namespace adminlte.Models
         public int DepartmentID { get; set; }
         [Key, Column(Order = 1)]
         public string UserId { get; set; }
+
+        public DateTime CreatedOn { get; set; }
+        public DateTime ModifiedOn { get; set; }
     }
 }

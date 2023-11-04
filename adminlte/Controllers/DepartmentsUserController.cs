@@ -17,8 +17,7 @@ namespace adminlte.Controllers
         // GET: Departments
         public ActionResult Index()
         {
-
-            return View(db.Departments.ToList());
+            return View(db.DepartmentUser.ToList());
         }
 
         // GET: Departments/Details/5

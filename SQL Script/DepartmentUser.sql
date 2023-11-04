@@ -11,6 +11,8 @@ GO
 CREATE TABLE [dbo].[DepartmentUser](
 	[UserId] [nvarchar](128) NOT NULL,
 	[DepartmentID] [int] NOT NULL,
+	[CreatedOn] [datetime] NOT NULL,
+	[ModifiedOn] [datetime] NOT NULL
  CONSTRAINT [PK_DepartmentUser] PRIMARY KEY CLUSTERED 
 (
 	[UserId] ASC,

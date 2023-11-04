@@ -1,0 +1,111 @@
+﻿@model adminlte.ViewModels.DepartmentUserRequestViewModel
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            DEPARTMENT USER
+            <small>Create a new user</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Department user</a></li>
+            <li><a href="#">Create</a></li>
+            <li class="active">Create</li>
+        </ol>
+    </section>
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box">
+                    <!-- /.box-header -->
+                    <div class="box-header">
+                        <div class="col-lg-10">
+
+                        </div>
+                        <div class="col-lg-2">
+
+                        </div>
+
+                        @* <div class="col-md-3 col-sm-4"><i class="fa fa-fw fa-plus" onclick="redirectToAddPage"></i> New Department</div>*@
+                    </div>
+                    <div class="box-body">
+
+
+                        @using (Html.BeginForm("Create", "DepartmentsUser", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-horizontal">
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                <div class="form-group ">
+                                    @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Email" })
+
+                                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group ">
+                                    @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-8">
+                                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Password" })
+
+                                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.ConfirmPassword, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-8">
+                                        @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", placeholder = "Retype password" })
+
+                                        @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.DepartmentID, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.DepartmentID, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.DepartmentID, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-offset-2 col-md-8">
+                                        <input type="submit" class="btn btn-primary pull-right" value="Create" />
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+        function getDepartments() {
+            $.ajax({
+                type: 'GET',
+                url: '/Departments/GetDepartments',
+                success: function (response) {
+                    toastr.success("Dependencies loaded Succesfully");
+                    debugger;
+                },
+                error: function (xhr, status, error) {
+
+                    toastr.error("Dependencies couldn't be loaded");
+                }
+            });
+        }
+        </script>
+}
