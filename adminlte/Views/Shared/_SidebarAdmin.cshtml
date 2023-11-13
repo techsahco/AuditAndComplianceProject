@@ -46,11 +46,19 @@
                 </span>*@
             </a>
         </li>
+        <li class="@Html.IsSelected(controller: "DepartmentsUser")">
+            <a href="@Url.Action("Index", "DepartmentsUser")">
+                <i class="fa fa-files-o"></i> <span>Department Users</span>
+                @*<span class="pull-right-container">
+                    <small class="label pull-right bg-green">new</small>
+                </span>*@
+            </a>
+        </li>
         <li class="@Html.IsSelected(controller: "RiskItem")">
             <a href="@Url.Action("Index", "RiskItem")">
                 <i class="fa fa-table"></i> <span>Risk Category</span>
-                </a>
-            </li>
+            </a>
+        </li>
         <li class="@Html.IsSelected(controller: "Categories")">
             <a href="@Url.Action("Index", "Categories")">
                 <i class="fa fa-th"></i> <span>Categories</span>

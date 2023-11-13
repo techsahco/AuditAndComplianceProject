@@ -63,8 +63,8 @@
                                             @Html.DisplayFor(modelItem => item.DepartmentName)
                                         </td>
                                         <td>
-                                            <i class="fa fa-fw fa-edit" style="color:cadetblue" onclick="editDepartment(@item.DepartmentID)"></i>
-                                            <i class="fa fa-fw fa-trash" style="color:red" onclick="deleteDepartment(@item.DepartmentID)"></i>
+                                            <i class="fa fa-fw fa-edit" style="color:cadetblue" onclick="editDepartment('@item.UserId')"></i>
+                                            <i class="fa fa-fw fa-trash" style="color:red" onclick="deleteDepartment('@item.UserId')"></i>
                                             @*@Html.ActionLink("Edit", "Edit", new { id = item.DepartmentID }) |
                                                 @Html.ActionLink("Delete", "Delete", new { id = item.DepartmentID })*@
                                         </td>
@@ -81,39 +81,6 @@
                                     </tr>
                                 </tfoot>*@
                         </table>
-                    </div>
-
-                    <div class="modal fade" id="modal-default">
-                        <div class="modal-dialog" style="width: 500px !important">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    <h4 class="modal-title" id="ModalTitle">Add</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <form id="Create">
-                                        <div class="form-group">
-                                            <input type="hidden" id="ID" value="">
-                                            @*<label>Department Name</label>*@
-                                            <input type="text" name="DepartmentName" id="DepartmentName" class="form-control" placeholder="Department Name">
-                                        </div>
-                                        <div class="checkbox">
-                                            <label>
-                                                <input type="checkbox" value="false" name="IsPrimary" id="IsPrimary"> Department is primary?
-                                            </label>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary" onclick="SaveData()">Save changes</button>
-                                </div>
-                            </div>
-                            <!-- /.modal-content -->
-                        </div>
-                        <!-- /.modal-dialog -->
                     </div>
                     <!-- /.box-body -->
                 </div>
@@ -143,88 +110,8 @@
             })
         });
         var isEdit = false;
-        function SaveData() {
-            if (isEdit == false) {
-                var formData = {
-                    DepartmentName: $('#DepartmentName').val(),
-                    IsPrimary: $("#IsPrimary").prop('checked')
-                };
-                $.ajax({
-                    type: 'POST',
-                    url: '/Departments/Create',
-                    data: formData,
-                    success: function (response) {
-                        if (response.success) {
-                            toastr.success("Department Added Succesfully");
-                            window.setTimeout(function () {
-                                location.reload();
-                            }, 1000);
-                        }
-                        else {
-
-                            if (response.errorMesage == undefined) {
-                                toastr.error("Unexpected error has occured");
-                            }
-                            else { toastr.error(response.errorMesage); }
-                        }
-                    },
-                    error: function (xhr, status, error) {
-
-                        toastr.error("Unexpected error has occured");
-                    }
-                });
-            }
-            else {
-                var formData = {
-                    DepartmentName: $('#DepartmentName').val(),
-                    IsPrimary: $("#IsPrimary").prop('checked'),
-                    DepartmentID: $("#ID").val()
-                };
-                $.ajax({
-                    type: 'POST',
-                    url: '/Departments/Edit',
-                    data: formData,
-                    success: function (response) {
-                        if (response.success) {
-                            toastr.success("Department Updated Succesfully");
-                            window.setTimeout(function () {
-                                location.reload();
-                            }, 1000);
-                        }
-                        else {
-
-                            if (response.errorMesage == undefined) {
-                                toastr.error("Unexpected error has occured");
-                            }
-                            else { toastr.error(response.errorMesage); }
-                        }
-                    },
-                    error: function (xhr, status, error) {
-
-                        toastr.error("Unexpected error has occured");
-                    }
-                });
-            }
-        }
         function editDepartment(data) {
-            $.ajax({
-                type: 'GET',
-                url: '/Departments/Edit',
-                data: { id: data },
-                success: function (response) {
-                    if (response.success) {
-                        toastr.success("Department data loaded Succesfully");
-                        OpenEditModal(response.data);
-                    }
-                    else {
-                        toastr.error("Unexpected error has occured");
-                    }
-                },
-                error: function (xhr, status, error) {
-
-                    toastr.error("Unexpected error has occured");
-                }
-            });
+            window.location.href = "/DepartmentsUser/Edit/"+data;
         }
         var deleteID = 0;
         function deleteDepartment(data) {
@@ -232,31 +119,17 @@
             showPopup();
         }
         function OpenAddModal() {
-            $("#ModalTitle").val("Add");
-            $("#DepartmentName").val("");
-            $("#IsPrimary").prop('checked', false);
-            $('#modal-default').modal('show');
-            isEdit = false;
-        }
-        function OpenEditModal(data) {
-            $("#ModalTitle").val("Edit");
-            $("#DepartmentName").val("");
-            $("#IsPrimary").prop('checked', false);
-            $("#DepartmentName").val(data.DepartmentName);
-            $("#IsPrimary").prop('checked', data.IsPrimary);
-            $("#ID").val(data.DepartmentID);
-            $('#modal-default').modal('show');
-            isEdit = true;
+            window.location.href = "/DepartmentsUser/Create"
         }
         function confirmAction() {
-           //delete
+            //delete
             $.ajax({
                 type: 'POST',
-                url: '/Departments/Delete',
-                data: { id: deleteID },
+                url: '/DepartmentsUser/Delete',
+                data: { userid: deleteID },
                 success: function (response) {
                     if (response.success) {
-                        toastr.success("Department delete Succesfully");
+                        toastr.success("User deleted Succesfully");
                         window.setTimeout(function () {
                             location.reload();
                         }, 1000);
@@ -272,6 +145,7 @@
             });
             closePopup();
         }
+       
     </script>
 
 }

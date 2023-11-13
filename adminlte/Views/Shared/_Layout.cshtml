@@ -145,7 +145,7 @@
 
         // Get UserRole from cookie
         function getUserRole() {
-            debugger;
+            
             var authCookie = document.cookie
                 .split('; ')
                 .find(row => row.startsWith('@FormsAuthentication.FormsCookieName='));
@@ -176,7 +176,7 @@
 
         //Get UserName
         function getUserName(userRole) {
-            debugger;
+            
             // Get user details from the cookie and update the user name in the sidebar
             if (userRole && userRole.Name) {
                 document.getElementById('user-name').textContent = userRole.Name; 

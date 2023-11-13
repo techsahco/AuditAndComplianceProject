@@ -41,45 +41,48 @@
                         {
                             @Html.AntiForgeryToken()
 
-                            <div class="form-horizontal">
-                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                                <div class="form-group ">
-                                    @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
-                                    <div class="col-md-8">
-                                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Email" })
+                        <div class="form-horizontal">
+                            <div class="form-group ">
+                                @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-8">
+                                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Email" })
 
-                                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
-                                    </div>
-                                </div>
-                                <div class="form-group ">
-                                    @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2" })
-                                    <div class="col-md-8">
-                                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Password" })
-
-                                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(model => model.ConfirmPassword, htmlAttributes: new { @class = "control-label col-md-2" })
-                                    <div class="col-md-8">
-                                        @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", placeholder = "Retype password" })
-
-                                        @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger" })
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(model => model.DepartmentID, htmlAttributes: new { @class = "control-label col-md-2" })
-                                    <div class="col-md-8">
-                                        @Html.EditorFor(model => model.DepartmentID, new { htmlAttributes = new { @class = "form-control" } })
-                                        @Html.ValidationMessageFor(model => model.DepartmentID, "", new { @class = "text-danger" })
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-offset-2 col-md-8">
-                                        <input type="submit" class="btn btn-primary pull-right" value="Create" />
-                                    </div>
+                                    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
                                 </div>
                             </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.DepartmentID, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-8">
+                                    @Html.DropDownListFor(model => model.DepartmentID, new List<SelectListItem> { new SelectListItem { Text = "Select a Department", Value = "-1" } },
+                                    new { @class = "form-control", id = "DepartmentDropdown" })
+                                    @Html.ValidationMessageFor(model => model.DepartmentID, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group ">
+                                @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-8">
+                                    @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Password" })
+
+                                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ConfirmPassword, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-8">
+                                    @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", placeholder = "Retype password" })
+
+                                    @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-offset-2 col-md-8">
+                                    <input type="submit" class="btn btn-primary pull-right" value="Create" />
+                                </div>
+                            </div>
+
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        </div>
                         }
 
                     </div>
@@ -93,13 +96,21 @@
     @Scripts.Render("~/bundles/jqueryval")
 
     <script type="text/javascript">
+        $(document).ready(function () {
+            getDepartments();
+        });
         function getDepartments() {
             $.ajax({
                 type: 'GET',
                 url: '/Departments/GetDepartments',
                 success: function (response) {
                     toastr.success("Dependencies loaded Succesfully");
-                    debugger;
+                    var options = '';
+                    //options += '<option value="-1">Select Department</option>';
+                    for (var i = 0; i < response.data.length; i++) {
+                        options += '<option value="' + response.data[i].DepartmentID + '">' + response.data[i].DepartmentName + '</option>';
+                    }
+                    $('#DepartmentDropdown').append(options);
                 },
                 error: function (xhr, status, error) {
 

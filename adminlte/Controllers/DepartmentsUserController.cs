@@ -7,17 +7,61 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using adminlte.Models;
+using adminlte.ViewModels;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.AspNet.Identity;
+using System.Threading.Tasks;
 
 namespace adminlte.Controllers
 {
     public class DepartmentsUserController : Controller
-    {                                                                                   
+    {
         private AuditCompliance db = new AuditCompliance();
+        private ApplicationUserManager _userManager;
+        private ApplicationRoleManager _roleManager;
+
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+            private set
+            {
+                _userManager = value;
+            }
+        }
+
+        public ApplicationRoleManager RoleManager
+        {
+            get
+            {
+                return _roleManager ?? HttpContext.GetOwinContext().Get<ApplicationRoleManager>();
+            }
+
+            private set
+            {
+                _roleManager = value;
+            }
+        }
 
         // GET: Departments
         public ActionResult Index()
         {
-            return View(db.DepartmentUser.ToList());
+            var departments = db.Departments.ToList();
+            var departUsers = db.DepartmentUser.ToList();
+            List<DepartmentUserViewModel> list = new List<DepartmentUserViewModel>();
+            foreach (var item in departUsers)
+            {
+                list.Add(new DepartmentUserViewModel()
+                {
+                    DepartmentName = departments.Where(x => x.DepartmentID == item.DepartmentID).FirstOrDefault().DepartmentName,
+                    UserName = UserManager.FindByIdAsync(item.UserId).Result.UserName,
+                    UserId = item.UserId,
+
+                });
+            }
+            return View(list);
         }
 
         // GET: Departments/Details/5
@@ -45,70 +89,126 @@ namespace adminlte.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public ActionResult Create(Department department)
+        public async Task<ActionResult> Create(DepartmentUserRequestViewModel requestModel)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var isExist = db.Departments.Where(x => x.DepartmentName == department.DepartmentName).FirstOrDefault();
-                if (isExist == null)
-                {
-                    department.CreatedOn = DateTime.Now;
-                    department.ModifiedOn = DateTime.Now;
-                    db.Departments.Add(department);
-                    db.SaveChanges();
-                    return Json(new { success = true }, JsonRequestBehavior.AllowGet);
-                }
-                return Json(new { success = false ,errorMesage = "Same Name already exist"}, JsonRequestBehavior.AllowGet);
+                return View(requestModel);
             }
+            else
+            {
+                var user = new ApplicationUser { UserName = requestModel.Email, Email = requestModel.Email };
+                var userEmailExist = UserManager.FindByEmail(user.Email);
+                if (userEmailExist == null)
+                {
+                    var result = await UserManager.CreateAsync(user, requestModel.Password);
+                    if (result.Succeeded)
+                    {
+                        // Find the role you want to assign (e.g., "Admin")
+                        var role = await RoleManager.FindByNameAsync("User");
 
-            return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+                        if (role != null)
+                        {
+                            // Assign the role to the user
+                            var roleResult = await UserManager.AddToRoleAsync(user.Id, role.Name);
+
+                            if (roleResult.Succeeded)
+                            {
+                                //now add relation to Department User table
+                                db.DepartmentUser.Add(new DepartmentUser() { UserId = user.Id, DepartmentID = requestModel.DepartmentID, CreatedOn = DateTime.Now, ModifiedOn = DateTime.Now });
+                                db.SaveChanges();
+                                return RedirectToAction("Index");
+                            }
+                            else
+                            {
+                                // Handle role assignment error
+                                ModelState.AddModelError(string.Empty, "Error assigning role to the user.");
+                                return View(requestModel);
+                            }
+                        }
+                        else
+                        {
+                            // Handle role not found error
+                            ModelState.AddModelError(string.Empty, "Selected role not found.");
+                            return View(requestModel);
+                        }
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "User Exist with same email");
+                }
+
+                return View(requestModel);
+            }
         }
 
         // GET: Departments/Edit/5
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(string id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Department department = db.Departments.Find(id);
-            if (department == null)
+            DepartmentUserRequestViewModel departmentUserRequestViewModel = new DepartmentUserRequestViewModel();
+            DepartmentUser depUser = db.DepartmentUser.Where(x => x.UserId == id).FirstOrDefault();
+            var department = db.Departments.Where(x => x.DepartmentID == depUser.DepartmentID).FirstOrDefault();
+            var user = UserManager.FindById(depUser.UserId);
+            departmentUserRequestViewModel.Email = user.Email;
+            departmentUserRequestViewModel.userId = user.Id;
+            departmentUserRequestViewModel.DepartmentID = department.DepartmentID;
+            if (depUser == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            return Json(new { success = true, data = department }, JsonRequestBehavior.AllowGet);
+            ViewBag.selectedDepartment = department.DepartmentID;
+            return View(departmentUserRequestViewModel);
         }
 
         // POST: Departments/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public ActionResult Edit(Department department)
+        public ActionResult Edit(DepartmentUserRequestViewModel model)
         {
             if (ModelState.IsValid)
             {
-                Department dep = db.Departments.Find(department.DepartmentID);
-                if (dep == null)
+                var user = UserManager.FindByEmail(model.Email);
+                var departmentUser = db.DepartmentUser.Where(x => x.UserId == user.Id && x.DepartmentID == model.DepartmentID).FirstOrDefault();
+                
+                if (departmentUser == null)
                 {
-                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                    ModelState.AddModelError(null, "Unable to find user");
                 }
                 else
                 {
-                    var isExist = db.Departments.Where(x => x.DepartmentName == department.DepartmentName && x.DepartmentID != department.DepartmentID).FirstOrDefault();
-                    if (isExist == null)
-                    {
-                        dep.ModifiedOn = DateTime.Now;
-                        dep.DepartmentName = department.DepartmentName;
-                        dep.IsPrimary = department.IsPrimary;
-                        db.SaveChanges();
-                        return Json(new { success = true }, JsonRequestBehavior.AllowGet);
+                    departmentUser.ModifiedOn = DateTime.Now;
+                    db.SaveChanges();
+                    if(user != null) {
+                        UserManager.ChangePassword(user.Id, model.OldPassword, model.Password);
                     }
-                    return Json(new { success = false, errorMesage = "Same Name already exist" }, JsonRequestBehavior.AllowGet);
                 }
             }
-            return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+            ViewBag.selectedDepartment = model.DepartmentID;
+            return View(model);
         }
+        [HttpGet]
+        public async Task<ActionResult> VerifyPassword(string email, string oldpassword)
+        {
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(oldpassword))
+            {
+                return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                var isVerfied = await UserManager.CheckPasswordAsync(UserManager.FindByEmail(email), oldpassword);
+                if (isVerfied)
+                    return Json(new { success = true }, JsonRequestBehavior.AllowGet);
+                else
+                    return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+            }
 
+        }
         // GET: Departments/Delete/5
         public ActionResult Delete(int? id)
         {
@@ -126,15 +226,20 @@ namespace adminlte.Controllers
 
         // POST: Departments/Delete/5
         [HttpPost, ActionName("Delete")]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(string userid)
         {
             try
             {
-                Department department = db.Departments.Find(id);
-                if (department != null)
+                var user = UserManager.FindById(userid);
+                var departmentUser = db.DepartmentUser.Where(x => x.UserId == user.Id).FirstOrDefault();
+
+                if (departmentUser != null)
                 {
-                    db.Departments.Remove(department);
+                    //remove relation
+                    db.DepartmentUser.Remove(departmentUser);
                     db.SaveChanges();
+                    //remove user
+                    UserManager.Delete(user);
                     return Json(new { success = true }, JsonRequestBehavior.AllowGet);
                 }
                 return Json(new { success = false }, JsonRequestBehavior.AllowGet);

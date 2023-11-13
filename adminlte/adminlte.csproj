@@ -4255,6 +4255,7 @@
     <Content Include="Views\Categories\Edit.cshtml" />
     <Content Include="Views\Categories\Index.cshtml" />
     <Content Include="Views\DepartmentsUser\Create.cshtml" />
+    <Content Include="Views\DepartmentsUser\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202310041609392_InitialIdentity.resx">

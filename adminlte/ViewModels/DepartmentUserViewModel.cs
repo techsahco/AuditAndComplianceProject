@@ -10,7 +10,7 @@ namespace adminlte.ViewModels
     {
         public int DepartmentID { get; set; }
         public string DepartmentName { get; set; }
-        public bool IsPrimary { get; set; }
+        public string DepUserPrimary { get; set; }
 
         public string UserId { get; set; }
 
@@ -21,6 +21,7 @@ namespace adminlte.ViewModels
     {
 
         [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "Please Select a department")]
         [Display(Name = "Department")]
         public int DepartmentID { get; set; }
         [Required]
@@ -38,5 +39,12 @@ namespace adminlte.ViewModels
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        public string userId { get; set; }
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [DataType(DataType.Password)]
+        [Display(Name = "Password")]
+        public string OldPassword { get; set; }
     }
 }
