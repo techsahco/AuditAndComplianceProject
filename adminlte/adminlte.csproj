@@ -170,10 +170,16 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\RiskItemClassController.cs" />
+    <Compile Include="Controllers\AuditRiskItemController.cs" />
+    <Compile Include="Controllers\RiskItemSubClassController.cs" />
+    <Compile Include="Controllers\RiskItemCetogoryController.cs" />
+    <Compile Include="Controllers\AuditClassController.cs" />
     <Compile Include="Controllers\CalendarController.cs" />
     <Compile Include="Controllers\CategoriesController.cs" />
     <Compile Include="Controllers\ChartsController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
+    <Compile Include="Controllers\AuditCategoryController.cs" />
     <Compile Include="Controllers\RiskItemController.cs" />
     <Compile Include="Controllers\DepartmentsUserController.cs" />
     <Compile Include="Controllers\DepartmentsController.cs" />
@@ -196,13 +202,21 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\AuditCategory.cs" />
+    <Compile Include="Models\AuditClass.cs" />
     <Compile Include="Models\AuditCompliance.cs" />
+    <Compile Include="Models\AuditRiskItem.cs" />
+    <Compile Include="Models\AuditModel.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\DepartmentUser.cs" />
     <Compile Include="Models\Department.cs" />
+    <Compile Include="Models\GenericAuditViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\RiskItem.cs" />
+    <Compile Include="Models\RiskItemCategory.cs" />
+    <Compile Include="Models\RiskItemClass.cs" />
+    <Compile Include="Models\RiskItemSubClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\DepartmentUserViewModel.cs" />
@@ -4256,6 +4270,8 @@
     <Content Include="Views\Categories\Index.cshtml" />
     <Content Include="Views\DepartmentsUser\Create.cshtml" />
     <Content Include="Views\DepartmentsUser\Edit.cshtml" />
+    <Content Include="Views\AuditCategory\Index.cshtml" />
+    <Content Include="Views\AuditClass\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202310041609392_InitialIdentity.resx">

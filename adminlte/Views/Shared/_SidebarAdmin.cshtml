@@ -67,6 +67,22 @@
                 </span>*@
             </a>
         </li>
+        <li class="@Html.IsSelected(controller: "AuditCategory")">
+            <a href="@Url.Action("Index", "AuditCategory")">
+                <i class="fa fa-th"></i> <span>Audit Category</span>
+                @*<span class="pull-right-container">
+                    <small class="label pull-right bg-green">new</small>
+                </span>*@
+            </a>
+        </li>
+        <li class="@Html.IsSelected(controller: "AuditClass")">
+            <a href="@Url.Action("Index", "AuditClass")">
+                <i class="fa fa-th"></i> <span>Audit Class</span>
+                @*<span class="pull-right-container">
+                    <small class="label pull-right bg-green">new</small>
+                </span>*@
+            </a>
+        </li>
     </ul>
     </section>
     <!-- /.sidebar -->

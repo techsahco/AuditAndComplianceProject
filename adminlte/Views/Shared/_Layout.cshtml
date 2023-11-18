@@ -9,6 +9,14 @@
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <title>@ViewBag.Title - Audit Compliance IMC</title>
+
+    @*scripts before page load*@
+    <script>
+        function addSpaceBetweenCapital(str) {
+            if (str == undefined) return '';
+            return str.replace(/([a-z])([A-Z])/g, '$1 $2');
+        }
+    </script>
     @Styles.Render("~/Content/css")
     <!-- Add Toastr.css for styles -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
