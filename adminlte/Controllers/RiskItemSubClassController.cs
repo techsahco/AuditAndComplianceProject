@@ -14,94 +14,92 @@ namespace adminlte.Controllers
     {
         private readonly AuditCompliance _context = new AuditCompliance();
 
-        // GET: AuditCategory
+        // GET: AuditClass
         public ActionResult Index()
         {
-            var auditCategories = _context.AuditCategories.ToList();
-            return View(auditCategories);
+            return View(new GenericAuditViewModel<RiskItemSubClass>
+            {
+                AuditModel = _context.RiskItemSubClasses
+                .Include(a => a.RiskItemClass)
+                .Include(a => a.RiskItemClass.RiskItemCategory)
+                .Include(a => a.RiskItemClass.RiskItemCategory.AuditClass)
+                .Include(a => a.RiskItemClass.RiskItemCategory.AuditClass.AuditCategory)
+                .ToList(),
+                ParentAuditDataModel = _context.RiskItemClasses.Select(x => new AuditModel { Code = x.RiskItemClassCode, Name = x.RiskItemClassName }).ToList()
+            });
         }
 
-        // GET: AuditCategory/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: AuditCategory/Create
+        // POST: Departments/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(AuditCategory auditCategory)
+        public ActionResult Create(AuditModel auditModel)
         {
-            if (ModelState.IsValid)
-            {
-                _context.AuditCategories.Add(auditCategory);
-                _context.SaveChanges();
-                return RedirectToAction("Index");
-            }
+            var isExist = _context.RiskItemSubClasses.Where(x => x.RiskItemSubClassCode == auditModel.Code).FirstOrDefault();
 
-            return View(auditCategory);
+            if (isExist != null) return Json(new { success = false, errorMesage = "Same Code already exist" }, JsonRequestBehavior.AllowGet);
+
+            _context.RiskItemSubClasses.Add(GetChildAuditModel(auditModel));
+            _context.SaveChanges();
+
+            return Json(new { success = true }, JsonRequestBehavior.AllowGet);
         }
 
-        // GET: AuditCategory/Edit/5
-        public ActionResult Edit(string id)
+        // GET: auditChildModel/Edit/5
+        public ActionResult Edit(string code)
         {
-            if (id == null)
+            if (code == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var auditChildModel = _context.RiskItemSubClasses.Find(code);
+
+            if (auditChildModel == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            return Json(new
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
-            var auditCategory = _context.AuditCategories.Find(id);
-
-            if (auditCategory == null)
-            {
-                return HttpNotFound();
-            }
-
-            return View(auditCategory);
+                success = true,
+                data = new AuditModel
+                {
+                    Code = auditChildModel.RiskItemSubClassCode,
+                    Name = auditChildModel.RiskItemSubClassName,
+                    ParentCode = auditChildModel.RiskItemClassCode
+                }
+            }, JsonRequestBehavior.AllowGet);
         }
 
-        // POST: AuditCategory/Edit/5
+        // POST: auditChildModel/Edit/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(AuditCategory auditCategory)
+        public ActionResult Edit(AuditModel auditModel)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Entry(auditCategory).State = EntityState.Modified;
-                _context.SaveChanges();
-                return RedirectToAction("Index");
-            }
+            if (auditModel.Code == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            return View(auditCategory);
-        }
+            var auditChildModel = _context.RiskItemSubClasses.Find(auditModel.Code);
 
-        // GET: AuditCategory/Delete/5
-        public ActionResult Delete(string id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            if (auditChildModel == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            var auditCategory = _context.AuditCategories.Find(id);
-
-            if (auditCategory == null)
-            {
-                return HttpNotFound();
-            }
-
-            return View(auditCategory);
+            auditChildModel.RiskItemSubClassName = auditModel.Name;
+            auditChildModel.RiskItemClassCode = auditModel.ParentCode;
+            _context.Entry(auditChildModel).State = EntityState.Modified;
+            _context.SaveChanges();
+            return Json(new { success = true }, JsonRequestBehavior.AllowGet);
         }
 
         // POST: AuditCategory/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(string id)
+        public ActionResult DeleteConfirmed(string code)
         {
-            var auditCategory = _context.AuditCategories.Find(id);
-            _context.AuditCategories.Remove(auditCategory);
-            _context.SaveChanges();
-            return RedirectToAction("Index");
+            try
+            {
+                var auditChildModel = _context.RiskItemSubClasses.Find(code);
+                if (auditChildModel == null) return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+
+                _context.RiskItemSubClasses.Remove(auditChildModel);
+                _context.SaveChanges();
+                return Json(new { success = true }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, errorMesage = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
         }
 
         protected override void Dispose(bool disposing)
@@ -111,6 +109,16 @@ namespace adminlte.Controllers
                 _context.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        private RiskItemSubClass GetChildAuditModel(AuditModel auditModel)
+        {
+            return new RiskItemSubClass
+            {
+                RiskItemSubClassCode = auditModel.Code,
+                RiskItemSubClassName = auditModel.Name,
+                RiskItemClassCode = auditModel.ParentCode
+            };
         }
     }
 

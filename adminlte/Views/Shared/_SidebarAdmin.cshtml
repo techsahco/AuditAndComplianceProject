@@ -41,9 +41,6 @@
         <li class="@Html.IsSelected(controller: "Departments")">
             <a href="@Url.Action("Index", "Departments")">
                 <i class="fa fa-files-o"></i> <span>Departments</span>
-                @*<span class="pull-right-container">
-                    <small class="label pull-right bg-green">new</small>
-                </span>*@
             </a>
         </li>
         <li class="@Html.IsSelected(controller: "DepartmentsUser")">
@@ -54,35 +51,151 @@
                 </span>*@
             </a>
         </li>
+
         <li class="@Html.IsSelected(controller: "RiskItem")">
             <a href="@Url.Action("Index", "RiskItem")">
                 <i class="fa fa-table"></i> <span>Risk Category</span>
             </a>
         </li>
+
         <li class="@Html.IsSelected(controller: "Categories")">
             <a href="@Url.Action("Index", "Categories")">
                 <i class="fa fa-th"></i> <span>Categories</span>
-                @*<span class="pull-right-container">
-                    <small class="label pull-right bg-green">new</small>
-                </span>*@
             </a>
         </li>
+
+        @*audit tree view*@
+        <li class="treeview">
+            <a href="#">
+                <i class="fa fa-share"></i> <span>Audit Level 1</span>
+                <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                </span>
+            </a>
+            <ul class="treeview-menu" style="display: none;">
+                <li class="@Html.IsSelected(controller: "AuditCategory")">
+                    <a href="@Url.Action("Index", "AuditCategory")">
+                        <i class="fa fa-th"></i> <span>Audit Category</span>
+                    </a>
+                </li>
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-share"></i>Audit Level 2
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu" style="display: none;">
+                        <li class="@Html.IsSelected(controller: "AuditClass")">
+                            <a href="@Url.Action("Index", "AuditClass")">
+                                <i class="fa fa-th"></i> <span>Audit Class</span>
+                            </a>
+                        </li>
+                        <li class="treeview">
+                            <a href="#">
+                                <i class="fa fa-share"></i>Audit Level 3
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu" style="display: none;">
+                                <li class="@Html.IsSelected(controller: "RiskItemCategory")">
+                                    <a href="@Url.Action("Index", "RiskItemCategory")">
+                                        <i class="fa fa-th"></i> <span>Risk Item Category</span>
+                                    </a>
+                                </li>
+                                <li class="treeview">
+                                    <a href="#">
+                                        <i class="fa fa-share"></i> <span>Audit Level 4</span>
+                                        <span class="pull-right-container">
+                                            <i class="fa fa-angle-left pull-right"></i>
+                                        </span>
+                                    </a>
+                                    <ul class="treeview-menu" style="display: none;">
+                                        <li class="@Html.IsSelected(controller: "RiskItemClass")">
+                                            <a href="@Url.Action("Index", "RiskItemClass")">
+                                                <i class="fa fa-th"></i> <span>Risk Item Class</span>
+                                            </a>
+                                        </li>
+                                        <li class="treeview">
+                                            <a href="#">
+                                                <i class="fa fa-share"></i>Audit Level 5
+                                                <span class="pull-right-container">
+                                                    <i class="fa fa-angle-left pull-right"></i>
+                                                </span>
+                                            </a>
+                                            <ul class="treeview-menu" style="display: none;">
+                                                <li class="@Html.IsSelected(controller: "RiskItemSubClass")">
+                                                    <a href="@Url.Action("Index", "RiskItemSubClass")">
+                                                        <i class="fa fa-th"></i> <span>Risk Item Sub Class</span>
+                                                    </a>
+                                                </li>
+                                                <li class="treeview">
+                                                    <a href="#">
+                                                        <i class="fa fa-share"></i>Audit Level 6
+                                                        <span class="pull-right-container">
+                                                            <i class="fa fa-angle-left pull-right"></i>
+                                                        </span>
+                                                    </a>
+                                                    <ul class="treeview-menu" style="display: none;">
+                                                        <li class="@Html.IsSelected(controller: "AuditRiskItem")">
+                                                            <a href="@Url.Action("Index", "AuditRiskItem")">
+                                                                <i class="fa fa-th"></i> <span>Risk Item</span>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+
+
+        @*
         <li class="@Html.IsSelected(controller: "AuditCategory")">
             <a href="@Url.Action("Index", "AuditCategory")">
                 <i class="fa fa-th"></i> <span>Audit Category</span>
-                @*<span class="pull-right-container">
-                    <small class="label pull-right bg-green">new</small>
-                </span>*@
             </a>
         </li>
+
         <li class="@Html.IsSelected(controller: "AuditClass")">
             <a href="@Url.Action("Index", "AuditClass")">
                 <i class="fa fa-th"></i> <span>Audit Class</span>
-                @*<span class="pull-right-container">
-                    <small class="label pull-right bg-green">new</small>
-                </span>*@
             </a>
         </li>
+
+        <li class="@Html.IsSelected(controller: "RiskItemCategory")">
+            <a href="@Url.Action("Index", "RiskItemCategory")">
+                <i class="fa fa-th"></i> <span>Risk Item Category</span>
+            </a>
+        </li>
+
+        <li class="@Html.IsSelected(controller: "RiskItemClass")">
+            <a href="@Url.Action("Index", "RiskItemClass")">
+                <i class="fa fa-th"></i> <span>Risk Item Class</span>
+            </a>
+        </li>
+
+        <li class="@Html.IsSelected(controller: "RiskItemSubClass")">
+            <a href="@Url.Action("Index", "RiskItemSubClass")">
+                <i class="fa fa-th"></i> <span>Risk Item Sub Class</span>
+            </a>
+        </li>
+
+        <li class="@Html.IsSelected(controller: "AuditRiskItem")">
+            <a href="@Url.Action("Index", "AuditRiskItem")">
+                <i class="fa fa-th"></i> <span>Risk Item</span>
+            </a>
+        </li>
+        *@
+
+
     </ul>
     </section>
     <!-- /.sidebar -->

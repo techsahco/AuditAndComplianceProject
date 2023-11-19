@@ -173,7 +173,7 @@
     <Compile Include="Controllers\RiskItemClassController.cs" />
     <Compile Include="Controllers\AuditRiskItemController.cs" />
     <Compile Include="Controllers\RiskItemSubClassController.cs" />
-    <Compile Include="Controllers\RiskItemCetogoryController.cs" />
+    <Compile Include="Controllers\RiskItemCategoryController.cs" />
     <Compile Include="Controllers\AuditClassController.cs" />
     <Compile Include="Controllers\CalendarController.cs" />
     <Compile Include="Controllers\CategoriesController.cs" />
@@ -4167,6 +4167,7 @@
     <Content Include="packages.config" />
     <Content Include="Content\adminlte\css\adminlte.css.map" />
     <Content Include="Content\adminlte\css\adminlte.min.css.map" />
+    <Content Include="Content\adminlte\js\auditscipt.js" />
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\adminlte\components\bootstrap-colorpicker\dist\css\bootstrap-colorpicker.css.map" />
     <Content Include="Scripts\adminlte\components\bootstrap-colorpicker\dist\css\bootstrap-colorpicker.min.css.map" />
@@ -4272,6 +4273,10 @@
     <Content Include="Views\DepartmentsUser\Edit.cshtml" />
     <Content Include="Views\AuditCategory\Index.cshtml" />
     <Content Include="Views\AuditClass\Index.cshtml" />
+    <Content Include="Views\RiskItemCategory\Index.cshtml" />
+    <Content Include="Views\RiskItemClass\Index.cshtml" />
+    <Content Include="Views\RiskItemSubClass\Index.cshtml" />
+    <Content Include="Views\AuditRiskItem\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202310041609392_InitialIdentity.resx">

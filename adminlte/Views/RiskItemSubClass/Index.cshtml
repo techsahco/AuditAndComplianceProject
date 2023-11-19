@@ -1,5 +1,5 @@
 ﻿@using adminlte.Models;
-@model GenericAuditViewModel<AuditClass>
+@model GenericAuditViewModel<RiskItemSubClass>
 
 @{
     ViewBag.Title = "Audit Categories";
@@ -14,13 +14,13 @@
 
 <div class="content-wrapper">
     <section class="content-header">
-        <span class="hidden" controllerName="AuditClass"></span>
+        <span class="hidden" controllerName="RiskItemSubClass"></span>
         <h1>
-            AUDIT CLASS
+            RISK ITEM SUB CLASS
             <small>Details</small>
         </h1>
         <ol class="breadcrumb">
-            <li><a href="#"><i class="fa fa-dashboard"></i> Audit Class </a></li>
+            <li><a href="#"><i class="fa fa-dashboard"></i> RISK ITEM SUB CLASS</a></li>
             <li><a href="#">Details</a></li>
             <li class="active">Details</li>
         </ol>
@@ -41,28 +41,41 @@
                         <table id="AuditCategory" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
-                                    <th>Audit Class Code</th>
-                                    <th>Audit Class Name</th>
-                                    <th>Audit Category Name</th>
+                                    <th>Risk Item Sub Class Code</th>
+                                    <th>Risk Item Sub Class Name</th>
+                                    <th>Risk Item Class</th>
+                                    <th>Risk Item Category</th>
+                                    <th>Audit Class</th>
+                                    <th>Audit Category</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var item in Model.AuditModel)
                                 {
+                                    string code = item.RiskItemSubClassCode;
                                     <tr>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.AuditClassCode)
+                                            @Html.DisplayFor(modelItem => code)
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.AuditClassName)
+                                            @Html.DisplayFor(modelItem => item.RiskItemSubClassName)
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.AuditCategory.AuditCategoryName)
+                                            @Html.DisplayFor(modelItem => item.RiskItemClass.RiskItemClassName)
                                         </td>
                                         <td>
-                                            <i class="fa fa-fw fa-edit" style="color:cadetblue" onclick="edit('@item.AuditClassCode')"></i>
-                                            <i class="fa fa-fw fa-trash" style="color:red" onclick="deleteAudit('@item.AuditClassCode')"></i>
+                                            @Html.DisplayFor(modelItem => item.RiskItemClass.RiskItemCategory.RiskItemCategoryName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.RiskItemClass.RiskItemCategory.AuditClass.AuditClassName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.RiskItemClass.RiskItemCategory.AuditClass.AuditCategory.AuditCategoryName)
+                                        </td>
+                                        <td>
+                                            <i class="fa fa-fw fa-edit" style="color:cadetblue" onclick="edit('@code')"></i>
+                                            <i class="fa fa-fw fa-trash" style="color:red" onclick="deleteAudit('@code')"></i>
                                         </td>
                                     </tr>
                                 }
@@ -83,16 +96,16 @@
                                 <div class="modal-body">
                                     <form id="Create">
                                         <div class="form-group">
-                                            <label> Audit Class Code </label>
-                                            <input type="text" name="AuditCode" id="AuditCode" class="form-control" placeholder="Audit Class Code">
+                                            <label> Risk Item Sub Class Code</label>
+                                            <input type="text" name="AuditCode" id="AuditCode" class="form-control" placeholder="Risk Item Sub Class Code">
                                         </div>
                                         <div class="form-group">
-                                            <label> Audit Class Name </label>
-                                            <input type="text" name="AuditName" id="AuditName" class="form-control" placeholder="Audit Class Name">
+                                            <label> Risk Item Sub Class Name </label>
+                                            <input type="text" name="AuditName" id="AuditName" class="form-control" placeholder="Risk Item Sub Class Name">
                                         </div>
                                         <div class="form-group">
-                                            <label> Select Audit Category </label>
-                                            <select class="form-control" name="AuditParentCode" id="AuditParentCode" placeholder="Select Audit Category">
+                                            <label> Select Risk Item Class </label>
+                                            <select class="form-control" name="AuditParentCode" id="AuditParentCode" placeholder="">
 
                                                 @foreach (var item in Model.ParentAuditDataModel)
                                                 {

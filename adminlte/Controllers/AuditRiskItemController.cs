@@ -12,137 +12,94 @@ namespace adminlte.Controllers
 {
     public class AuditRiskItemController : Controller
     {
-        private AuditCompliance db = new AuditCompliance();
+        private readonly AuditCompliance _context = new AuditCompliance();
 
-        // GET: RiskItems
+        // GET: AuditClass
         public ActionResult Index()
         {
-            return View(db.RiskItems.ToList());
-        }
-
-        // GET: RiskItems/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
+            return View(new GenericAuditViewModel<AuditRiskItem>
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            RiskItem riskItem = db.RiskItems.Find(id);
-            if (riskItem == null)
-            {
-                return HttpNotFound();
-            }
-            return View(riskItem);
+                AuditModel = _context.AuditRiskItems
+                .Include(a => a.RiskItemSubClass)
+                .Include(a => a.RiskItemSubClass.RiskItemClass)
+                .Include(a => a.RiskItemSubClass.RiskItemClass.RiskItemCategory)
+                .Include(a => a.RiskItemSubClass.RiskItemClass.RiskItemCategory.AuditClass)
+                .Include(a => a.RiskItemSubClass.RiskItemClass.RiskItemCategory.AuditClass.AuditCategory)
+                .ToList(),
+                ParentAuditDataModel = _context.RiskItemSubClasses.Select(x => new AuditModel { Code = x.RiskItemSubClassCode, Name = x.RiskItemSubClassName }).ToList()
+            });
         }
 
-        // GET: RiskItems/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: RiskItems/Create
+        // POST: Departments/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public ActionResult Create(RiskItem riskItem)
+        public ActionResult Create(AuditModel auditModel)
         {
-            if (ModelState.IsValid)
+            var isExist = _context.AuditRiskItems.Where(x => x.RiskItemCode == auditModel.Code).FirstOrDefault();
+
+            if (isExist != null) return Json(new { success = false, errorMesage = "Same Code already exist" }, JsonRequestBehavior.AllowGet);
+
+            _context.AuditRiskItems.Add(GetChildAuditModel(auditModel));
+            _context.SaveChanges();
+
+            return Json(new { success = true }, JsonRequestBehavior.AllowGet);
+        }
+
+        // GET: auditChildModel/Edit/5
+        public ActionResult Edit(string code)
+        {
+            if (code == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var auditChildModel = _context.AuditRiskItems.Find(code);
+
+            if (auditChildModel == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            return Json(new
             {
-                var isExist = db.RiskItems.Where(x => x.RiskItemName == riskItem.RiskItemName).FirstOrDefault();
-                if (isExist == null)
+                success = true,
+                data = new AuditModel
                 {
-                    riskItem.CreatedOn = DateTime.Now;
-                    riskItem.ModifiedOn = DateTime.Now;
-                    db.RiskItems.Add(riskItem);
-                    db.SaveChanges();
-                    return Json(new { success = true }, JsonRequestBehavior.AllowGet);
+                    Code = auditChildModel.RiskItemCode,
+                    Name = auditChildModel.RiskItemName,
+                    ParentCode = auditChildModel.RiskItemSubClassCode
                 }
-                return Json(new { success = false ,errorMesage = "Same Name already exist"}, JsonRequestBehavior.AllowGet);
-            }
-
-            return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+            }, JsonRequestBehavior.AllowGet);
         }
 
-        // GET: RiskItems/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            RiskItem riskItem = db.RiskItems.Find(id);
-            if (riskItem == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            return Json(new { success = true, data = riskItem }, JsonRequestBehavior.AllowGet);
-        }
-
-        // POST: RiskItems/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: auditChildModel/Edit/5
         [HttpPost]
-        public ActionResult Edit(RiskItem riskItem)
+        public ActionResult Edit(AuditModel auditModel)
         {
-            if (ModelState.IsValid)
-            {
-                RiskItem risk = db.RiskItems.Find(riskItem.RiskItemID);
-                if (risk == null)
-                {
-                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-                }
-                else
-                {
-                    var isExist = db.RiskItems.Where(x => x.RiskItemName == riskItem.RiskItemName && x.RiskItemID != riskItem.RiskItemID).FirstOrDefault();
-                    if (isExist == null)
-                    {
-                        risk.ModifiedOn = DateTime.Now;
-                        risk.RiskItemName = riskItem.RiskItemName;
-                        risk.Priority = riskItem.Priority;
-                        db.SaveChanges();
-                        return Json(new { success = true }, JsonRequestBehavior.AllowGet);
-                    }
-                    return Json(new { success = false, errorMesage = "Same Name already exist" }, JsonRequestBehavior.AllowGet);
-                }
-            }
-            return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+            if (auditModel.Code == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var auditChildModel = _context.AuditRiskItems.Find(auditModel.Code);
+
+            if (auditChildModel == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            auditChildModel.RiskItemName = auditModel.Name;
+            auditChildModel.RiskItemSubClassCode = auditModel.ParentCode;
+            _context.Entry(auditChildModel).State = EntityState.Modified;
+            _context.SaveChanges();
+            return Json(new { success = true }, JsonRequestBehavior.AllowGet);
         }
 
-        // GET: RiskItems/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            RiskItem riskItem = db.RiskItems.Find(id);
-            if (riskItem == null)
-            {
-                return HttpNotFound();
-            }
-            return View(riskItem);
-        }
-
-        // POST: RiskItems/Delete/5
+        // POST: AuditCategory/Delete/5
         [HttpPost, ActionName("Delete")]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(string code)
         {
             try
             {
-                RiskItem riskItem = db.RiskItems.Find(id);
-                if (riskItem != null)
-                {
-                    db.RiskItems.Remove(riskItem);
-                    db.SaveChanges();
-                    return Json(new { success = true }, JsonRequestBehavior.AllowGet);
-                }
-                return Json(new { success = false }, JsonRequestBehavior.AllowGet);
-            }
-            catch
-            {
+                var auditChildModel = _context.AuditRiskItems.Find(code);
+                if (auditChildModel == null) return Json(new { success = false }, JsonRequestBehavior.AllowGet);
 
-                return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+                _context.AuditRiskItems.Remove(auditChildModel);
+                _context.SaveChanges();
+                return Json(new { success = true }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, errorMesage = ex.Message }, JsonRequestBehavior.AllowGet);
             }
         }
 
@@ -150,9 +107,19 @@ namespace adminlte.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                _context.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        private AuditRiskItem GetChildAuditModel(AuditModel auditModel)
+        {
+            return new AuditRiskItem
+            {
+                RiskItemCode = auditModel.Code,
+                RiskItemName = auditModel.Name,
+                RiskItemSubClassCode = auditModel.ParentCode
+            };
         }
     }
 }

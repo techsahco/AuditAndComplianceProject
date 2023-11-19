@@ -10,21 +10,20 @@ using adminlte.Models;
 
 namespace adminlte.Controllers
 {
-    public class RiskItemClassController : Controller
+    public class RiskItemCategoryController : Controller
     {
         private readonly AuditCompliance _context = new AuditCompliance();
 
         // GET: AuditClass
         public ActionResult Index()
         {
-            return View(new GenericAuditViewModel<RiskItemClass>
+            return View(new GenericAuditViewModel<RiskItemCategory>
             {
-                AuditModel = _context.RiskItemClasses
-                .Include(a => a.RiskItemCategory)
-                .Include(a => a.RiskItemCategory.AuditClass)
-                .Include(a => a.RiskItemCategory.AuditClass.AuditCategory)
+                AuditModel = _context.RiskItemCategories
+                .Include(a => a.AuditClass)
+                .Include(a => a.AuditClass.AuditCategory)
                 .ToList(),
-                ParentAuditDataModel = _context.RiskItemCategories.Select(x => new AuditModel { Code = x.RiskItemCategoryCode, Name = x.RiskItemCategoryName }).ToList()
+                ParentAuditDataModel = _context.AuditClasses.Select(x => new AuditModel { Code = x.AuditClassCode, Name = x.AuditClassName }).ToList()
             });
         }
 
@@ -34,11 +33,11 @@ namespace adminlte.Controllers
         [HttpPost]
         public ActionResult Create(AuditModel auditModel)
         {
-            var isExist = _context.RiskItemClasses.Where(x => x.RiskItemCategoryCode == auditModel.Code).FirstOrDefault();
+            var isExist = _context.RiskItemCategories.Where(x => x.RiskItemCategoryCode == auditModel.Code).FirstOrDefault();
 
             if (isExist != null) return Json(new { success = false, errorMesage = "Same Code already exist" }, JsonRequestBehavior.AllowGet);
 
-            _context.RiskItemClasses.Add(GetChildAuditModel(auditModel));
+            _context.RiskItemCategories.Add(GetChildAuditModel(auditModel));
             _context.SaveChanges();
 
             return Json(new { success = true }, JsonRequestBehavior.AllowGet);
@@ -49,19 +48,19 @@ namespace adminlte.Controllers
         {
             if (code == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            var auditChildModel = _context.RiskItemClasses.Find(code);
+            var auditChildModel = _context.RiskItemCategories.Find(code);
 
             if (auditChildModel == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            return Json(new
-            {
-                success = true,
-                data = new AuditModel
-                {
-                    Code = auditChildModel.RiskItemClassCode,
-                    Name = auditChildModel.RiskItemClassName,
-                    ParentCode = auditChildModel.RiskItemCategoryCode
-                }
+            return Json(new 
+            { 
+                success = true, 
+                data = new AuditModel 
+                { 
+                    Code       = auditChildModel.RiskItemCategoryCode, 
+                    Name       = auditChildModel.RiskItemCategoryName, 
+                    ParentCode = auditChildModel.AuditClassCode 
+                } 
             }, JsonRequestBehavior.AllowGet);
         }
 
@@ -71,12 +70,12 @@ namespace adminlte.Controllers
         {
             if (auditModel.Code == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            var auditChildModel = _context.RiskItemClasses.Find(auditModel.Code);
+            var auditChildModel = _context.RiskItemCategories.Find(auditModel.Code);
 
             if (auditChildModel == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            auditChildModel.RiskItemClassName = auditModel.Name;
-            auditChildModel.RiskItemCategoryCode = auditModel.ParentCode;
+            auditChildModel.RiskItemCategoryName = auditModel.Name;
+            auditChildModel.AuditClassCode = auditModel.ParentCode;
             _context.Entry(auditChildModel).State = EntityState.Modified;
             _context.SaveChanges();
             return Json(new { success = true }, JsonRequestBehavior.AllowGet);
@@ -88,10 +87,10 @@ namespace adminlte.Controllers
         {
             try
             {
-                var auditChildModel = _context.RiskItemClasses.Find(code);
+                var auditChildModel = _context.RiskItemCategories.Find(code);
                 if (auditChildModel == null) return Json(new { success = false }, JsonRequestBehavior.AllowGet);
 
-                _context.RiskItemClasses.Remove(auditChildModel);
+                _context.RiskItemCategories.Remove(auditChildModel);
                 _context.SaveChanges();
                 return Json(new { success = true }, JsonRequestBehavior.AllowGet);
             }
@@ -110,15 +109,14 @@ namespace adminlte.Controllers
             base.Dispose(disposing);
         }
 
-        private RiskItemClass GetChildAuditModel(AuditModel auditModel)
+        private RiskItemCategory GetChildAuditModel(AuditModel auditModel)
         {
-            return new RiskItemClass
+            return new RiskItemCategory
             {
-                RiskItemClassCode = auditModel.Code,
-                RiskItemClassName = auditModel.Name,
-                RiskItemCategoryCode = auditModel.ParentCode
+                AuditClassCode = auditModel.ParentCode,
+                RiskItemCategoryName = auditModel.Name,
+                RiskItemCategoryCode = auditModel.Code
             };
         }
     }
-
 }

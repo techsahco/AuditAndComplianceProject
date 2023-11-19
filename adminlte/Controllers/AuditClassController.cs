@@ -30,7 +30,7 @@ namespace adminlte.Controllers
         [HttpPost]
         public ActionResult Create(AuditModel auditModel)
         {
-            var isExist = _context.AuditClasses.Where(x => x.AuditCategoryCode == auditModel.Code).FirstOrDefault();
+            var isExist = _context.AuditClasses.Where(x => x.AuditClassCode == auditModel.Code).FirstOrDefault();
 
             if (isExist != null) return Json(new { success = false, errorMesage = "Same Code already exist" }, JsonRequestBehavior.AllowGet);
 
@@ -64,7 +64,6 @@ namespace adminlte.Controllers
 
             auditChildModel.AuditClassName = auditModel.Name;
             auditChildModel.AuditCategoryCode = auditModel.ParentCode;
-            //_context.Entry(GetChildAuditModel(auditModel)).State = EntityState.Modified;
             _context.Entry(auditChildModel).State = EntityState.Modified;
             _context.SaveChanges();
             return Json(new { success = true }, JsonRequestBehavior.AllowGet);
@@ -83,9 +82,9 @@ namespace adminlte.Controllers
                 _context.SaveChanges();
                 return Json(new { success = true }, JsonRequestBehavior.AllowGet);
             }
-            catch
+            catch (Exception ex)
             {
-                return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+                return Json(new { success = false, errorMesage = ex.Message }, JsonRequestBehavior.AllowGet);
             }
         }
 

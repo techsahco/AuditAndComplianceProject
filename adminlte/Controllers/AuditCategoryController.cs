@@ -82,9 +82,9 @@ namespace adminlte.Controllers
                 _context.SaveChanges();
                 return Json(new { success = true }, JsonRequestBehavior.AllowGet);
             }
-            catch
+            catch(Exception ex)
             {
-                return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+                return Json(new { success = false, errorMesage = ex.Message }, JsonRequestBehavior.AllowGet);
             }
         }
 

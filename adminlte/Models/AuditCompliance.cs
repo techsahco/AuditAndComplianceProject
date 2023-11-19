@@ -77,7 +77,7 @@ namespace adminlte.Models
                 .HasRequired(e => e.AuditCategory)
                 .WithMany(e => e.AuditClasses)
                 .HasForeignKey(e => e.AuditCategoryCode)
-                .WillCascadeOnDelete(true);
+                .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<RiskItemCategory>()
                 .HasKey(e => e.RiskItemCategoryCode);
@@ -98,7 +98,7 @@ namespace adminlte.Models
                 .HasRequired(e => e.AuditClass)
                 .WithMany(e => e.RiskItemCategories)
                 .HasForeignKey(e => e.AuditClassCode)
-                .WillCascadeOnDelete(true);
+                .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<RiskItemClass>()
                 .HasKey(e => e.RiskItemClassCode);
@@ -119,7 +119,7 @@ namespace adminlte.Models
                 .HasRequired(e => e.RiskItemCategory)
                 .WithMany(e => e.RiskItemClasses)
                 .HasForeignKey(e => e.RiskItemCategoryCode)
-                .WillCascadeOnDelete(true);
+                .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<RiskItemSubClass>()
                 .HasKey(e => e.RiskItemSubClassCode);
@@ -140,7 +140,7 @@ namespace adminlte.Models
                 .HasRequired(e => e.RiskItemClass)
                 .WithMany(e => e.RiskItemSubClasses)
                 .HasForeignKey(e => e.RiskItemClassCode)
-                .WillCascadeOnDelete(true);
+                .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<AuditRiskItem>()
                 .HasKey(e => e.RiskItemCode);
@@ -161,7 +161,7 @@ namespace adminlte.Models
                 .HasRequired(e => e.RiskItemSubClass)
                 .WithMany(e => e.AuditRiskItems)
                 .HasForeignKey(e => e.RiskItemSubClassCode)
-                .WillCascadeOnDelete(true);
+                .WillCascadeOnDelete(false);
         }
 
     }
