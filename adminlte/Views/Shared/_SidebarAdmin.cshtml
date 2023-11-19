@@ -75,7 +75,7 @@
             <ul class="treeview-menu" style="display: none;">
                 <li class="@Html.IsSelected(controller: "AuditCategory")">
                     <a href="@Url.Action("Index", "AuditCategory")">
-                        <i class="fa fa-th"></i> <span>Audit Category</span>
+                        <span>Audit Category</span>
                     </a>
                 </li>
                 <li class="treeview">
@@ -87,8 +87,8 @@
                     </a>
                     <ul class="treeview-menu" style="display: none;">
                         <li class="@Html.IsSelected(controller: "AuditClass")">
-                            <a href="@Url.Action("Index", "AuditClass")">
-                                <i class="fa fa-th"></i> <span>Audit Class</span>
+                            <a href="@Url.Action("Index", "AuditClass")">    
+                                <span>Audit Class</span>
                             </a>
                         </li>
                         <li class="treeview">
@@ -101,7 +101,7 @@
                             <ul class="treeview-menu" style="display: none;">
                                 <li class="@Html.IsSelected(controller: "RiskItemCategory")">
                                     <a href="@Url.Action("Index", "RiskItemCategory")">
-                                        <i class="fa fa-th"></i> <span>Risk Item Category</span>
+                                        <span>Risk Item Category</span>
                                     </a>
                                 </li>
                                 <li class="treeview">
@@ -114,7 +114,7 @@
                                     <ul class="treeview-menu" style="display: none;">
                                         <li class="@Html.IsSelected(controller: "RiskItemClass")">
                                             <a href="@Url.Action("Index", "RiskItemClass")">
-                                                <i class="fa fa-th"></i> <span>Risk Item Class</span>
+                                                <span>Risk Item Class</span>
                                             </a>
                                         </li>
                                         <li class="treeview">
@@ -127,7 +127,7 @@
                                             <ul class="treeview-menu" style="display: none;">
                                                 <li class="@Html.IsSelected(controller: "RiskItemSubClass")">
                                                     <a href="@Url.Action("Index", "RiskItemSubClass")">
-                                                        <i class="fa fa-th"></i> <span>Risk Item Sub Class</span>
+                                                        <span>Risk Item Sub Class</span>
                                                     </a>
                                                 </li>
                                                 <li class="treeview">
@@ -140,7 +140,7 @@
                                                     <ul class="treeview-menu" style="display: none;">
                                                         <li class="@Html.IsSelected(controller: "AuditRiskItem")">
                                                             <a href="@Url.Action("Index", "AuditRiskItem")">
-                                                                <i class="fa fa-th"></i> <span>Risk Item</span>
+                                                                <span>Risk Item</span>
                                                             </a>
                                                         </li>
                                                     </ul>
@@ -155,7 +155,7 @@
                 </li>
             </ul>
         </li>
-
+        @*audit tree view*@
 
         @*
         <li class="@Html.IsSelected(controller: "AuditCategory")">
