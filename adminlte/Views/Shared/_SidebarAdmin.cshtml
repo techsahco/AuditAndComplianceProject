@@ -5,6 +5,9 @@
         line-height:0 !important;
         left:0px !important;
     }
+    .pd-left-0 {
+        padding-left: 0 !important;
+    }
 </style>
 <aside class="main-sidebar">
     <!-- sidebar: style can be found in sidebar.less -->
@@ -72,7 +75,7 @@
                     <i class="fa fa-angle-left pull-right"></i>
                 </span>
             </a>
-            <ul class="treeview-menu" style="display: none;">
+            <ul class="treeview-menu pd-left-0" style="display: none; padding">
                 <li class="@Html.IsSelected(controller: "AuditCategory")">
                     <a href="@Url.Action("Index", "AuditCategory")">
                         <span>Audit Category</span>
@@ -85,7 +88,7 @@
                             <i class="fa fa-angle-left pull-right"></i>
                         </span>
                     </a>
-                    <ul class="treeview-menu" style="display: none;">
+                    <ul class="treeview-menu pd-left-0" style="display: none;">
                         <li class="@Html.IsSelected(controller: "AuditClass")">
                             <a href="@Url.Action("Index", "AuditClass")">    
                                 <span>Audit Class</span>
@@ -98,7 +101,7 @@
                                     <i class="fa fa-angle-left pull-right"></i>
                                 </span>
                             </a>
-                            <ul class="treeview-menu" style="display: none;">
+                            <ul class="treeview-menu pd-left-0" style="display: none;">
                                 <li class="@Html.IsSelected(controller: "RiskItemCategory")">
                                     <a href="@Url.Action("Index", "RiskItemCategory")">
                                         <span>Risk Item Category</span>
@@ -111,7 +114,7 @@
                                             <i class="fa fa-angle-left pull-right"></i>
                                         </span>
                                     </a>
-                                    <ul class="treeview-menu" style="display: none;">
+                                    <ul class="treeview-menu pd-left-0" style="display: none;">
                                         <li class="@Html.IsSelected(controller: "RiskItemClass")">
                                             <a href="@Url.Action("Index", "RiskItemClass")">
                                                 <span>Risk Item Class</span>
@@ -124,7 +127,7 @@
                                                     <i class="fa fa-angle-left pull-right"></i>
                                                 </span>
                                             </a>
-                                            <ul class="treeview-menu" style="display: none;">
+                                            <ul class="treeview-menu pd-left-0" style="display: none;">
                                                 <li class="@Html.IsSelected(controller: "RiskItemSubClass")">
                                                     <a href="@Url.Action("Index", "RiskItemSubClass")">
                                                         <span>Risk Item Sub Class</span>
@@ -137,7 +140,7 @@
                                                             <i class="fa fa-angle-left pull-right"></i>
                                                         </span>
                                                     </a>
-                                                    <ul class="treeview-menu" style="display: none;">
+                                                    <ul class="treeview-menu pd-left-0" style="display: none;">
                                                         <li class="@Html.IsSelected(controller: "AuditRiskItem")">
                                                             <a href="@Url.Action("Index", "AuditRiskItem")">
                                                                 <span>Risk Item</span>
