@@ -287,6 +287,7 @@
     <Content Include="Content\adminlte\img\user6-128x128.jpg" />
     <Content Include="Content\adminlte\img\user7-128x128.jpg" />
     <Content Include="Content\adminlte\img\user8-128x128.jpg" />
+    <Content Include="Content\thinking.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
