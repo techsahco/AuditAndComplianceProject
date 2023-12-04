@@ -23,7 +23,7 @@ namespace adminlte.Controllers
         public ActionResult GetDepartments()
         {
             var departs = db.Departments.ToList();
-            return Json(new { success = true,data = departs }, JsonRequestBehavior.AllowGet);
+            return Json(new { success = true, data = departs }, JsonRequestBehavior.AllowGet);
         }
         // GET: Departments/Details/5
         public ActionResult Details(int? id)
@@ -59,11 +59,12 @@ namespace adminlte.Controllers
                 {
                     department.CreatedOn = DateTime.Now;
                     department.ModifiedOn = DateTime.Now;
+                    department.IsActive = true;
                     db.Departments.Add(department);
                     db.SaveChanges();
                     return Json(new { success = true }, JsonRequestBehavior.AllowGet);
                 }
-                return Json(new { success = false ,errorMesage = "Same Name already exist"}, JsonRequestBehavior.AllowGet);
+                return Json(new { success = false, errorMesage = "Same Name already exist" }, JsonRequestBehavior.AllowGet);
             }
 
             return Json(new { success = false }, JsonRequestBehavior.AllowGet);
@@ -110,6 +111,29 @@ namespace adminlte.Controllers
                     }
                     return Json(new { success = false, errorMesage = "Same Name already exist" }, JsonRequestBehavior.AllowGet);
                 }
+            }
+            return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult ChangeActive(int Id, bool state)
+        {
+            Department dep = db.Departments.Find(Id);
+            if (dep == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            else
+            {
+                var isExist = db.Departments.Where(x => x.DepartmentID == Id).FirstOrDefault();
+                if (isExist != null)
+                {
+                    dep.ModifiedOn = DateTime.Now;
+                    dep.IsActive = state;
+                    db.SaveChanges();
+                    return Json(new { success = true }, JsonRequestBehavior.AllowGet);
+                }
+                return Json(new { success = false, errorMesage = "Couldn't find the department" }, JsonRequestBehavior.AllowGet);
             }
             return Json(new { success = false }, JsonRequestBehavior.AllowGet);
         }

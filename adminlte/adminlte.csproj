@@ -205,6 +205,7 @@
     <Compile Include="Models\AuditCategory.cs" />
     <Compile Include="Models\AuditClass.cs" />
     <Compile Include="Models\AuditCompliance.cs" />
+    <Compile Include="Models\AuditRiskItemSecondaryDepartment.cs" />
     <Compile Include="Models\AuditRiskItem.cs" />
     <Compile Include="Models\AuditModel.cs" />
     <Compile Include="Models\Category.cs" />

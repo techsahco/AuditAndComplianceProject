@@ -15,9 +15,12 @@ namespace adminlte.Models
 
         [Required]
         public string RiskItemSubClassCode { get; set; }
+        [Required]
+        public int PrimaryDepartment { get; set; }
 
         // Navigation property
         [ForeignKey("RiskItemSubClassCode")]
         public RiskItemSubClass RiskItemSubClass { get; set; }
+
     }
 }

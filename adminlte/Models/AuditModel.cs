@@ -13,4 +13,10 @@ namespace adminlte.Models
         [Required]
         public string ParentCode { get; set; }
     }
+    public class AuditRiskItemModel : AuditModel
+    {
+        [Required]
+        public string PrimaryDepartment { get; set; }
+        public List<string> SecondaryDepartment { get; set; }
+    }
 }

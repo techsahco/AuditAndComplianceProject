@@ -8,6 +8,67 @@
     .fa {
         font-size: 18px !important;
     }
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 55px;
+        height: 22px;
+    }
+
+        /* Hide default HTML checkbox */
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+    /* The slider */
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 2px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+    input:checked + .slider {
+        background-color: #2196F3;
+    }
+
+    input:focus + .slider {
+        box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked + .slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+    }
+
+    /* Rounded sliders */
+    .slider.round {
+        border-radius: 34px;
+    }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
 </style>
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -46,6 +107,7 @@
                                 <tr>
                                     <th>Name</th>
                                     <th>Primary</th>
+                                    <th>Active</th>
                                     <th>Action</th>
                                     @*<th>Platform(s)</th>
                                         <th>Engine version</th>
@@ -61,6 +123,14 @@
                                         </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => item.IsPrimary)
+                                        </td>
+                                        <td>
+                                            <label class="switch">
+                                                <input type="checkbox" id="@item.DepartmentID" checked="@item.IsActive" onchange="ActiveChanged(@item.DepartmentID)">
+                                                @*@Html.DisplayFor(modelItem => item.IsActive)*@
+                                                <span class="slider round"></span>
+                                            </label>
+                                            @*@Html.DisplayFor(modelItem => item.IsActive)*@
                                         </td>
                                         <td>
                                             <i class="fa fa-fw fa-edit" style="color:cadetblue" onclick="editDepartment(@item.DepartmentID)"></i>
@@ -143,6 +213,27 @@
             })
         });
         var isEdit = false;
+        function ActiveChanged(e) {
+            var value = $("#" + e).prop('checked');
+            $.ajax({
+                type: 'POST',
+                url: '/Departments/ChangeActive',
+                data: { Id: e, state:value },
+                success: function (response) {
+                    if (response.success) {
+                        toastr.success("Department Active State Changed Successfully");
+                    }
+                    else {
+                        toastr.error("Unexpected error has occured");
+                    }
+                },
+                error: function (xhr, status, error) {
+
+                    toastr.error("Unexpected error has occured");
+                }
+            });
+            debugger;
+        }
         function SaveData() {
             if (isEdit == false) {
                 var formData = {

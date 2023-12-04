@@ -25,6 +25,7 @@ namespace adminlte.Models
         public virtual DbSet<RiskItemClass> RiskItemClasses { get; set; }
         public virtual DbSet<RiskItemSubClass> RiskItemSubClasses { get; set; }
         public virtual DbSet<AuditRiskItem> AuditRiskItems { get; set; }
+        public virtual DbSet<AuditRiskItemSecondaryDepartment> AuditRiskItemSecondaryDepartment { get; set; }
 
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

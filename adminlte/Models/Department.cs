@@ -15,6 +15,7 @@ namespace adminlte.Models
         [StringLength(100)]
         public string DepartmentName { get; set; }
         public bool IsPrimary { get; set; }
+        public bool IsActive { get; set; }
         public DateTime CreatedOn { get; set; }
         public DateTime ModifiedOn { get; set; }
     }

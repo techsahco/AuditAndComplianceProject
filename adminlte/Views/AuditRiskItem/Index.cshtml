@@ -4,6 +4,8 @@
 @{
     ViewBag.Title = "Audit Categories";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var primaryDep = ViewBag.PrimaryDepartments;
+    var secondaryDep = ViewBag.SecondaryDepartments;
 }
 
 <style>
@@ -100,17 +102,17 @@
                                 <div class="modal-body">
                                     <form id="Create">
                                         <div class="form-group">
-                                            <label> Risk Item </label>
+                                            <label> Audit Code </label>
                                             <input type="text" name="AuditCode" id="AuditCode" class="form-control" placeholder="Risk Item Code">
                                         </div>
                                         <div class="form-group">
-                                            <label> Risk Item </label>
+                                            <label> Audit Name </label>
                                             <input type="text" name="AuditName" id="AuditName" class="form-control" placeholder="Risk Item Name">
                                         </div>
                                         <div class="form-group">
-                                            <label> Risk Item </label>
+                                            <label> Audit Parent Code </label>
                                             <select class="form-control" name="AuditParentCode" id="AuditParentCode" placeholder="">
-
+                                                <option value="">---Select a parent---</option>
                                                 @foreach (var item in Model.ParentAuditDataModel)
                                                 {
                                                     <option value="@item.Code">@item.Name</option>
@@ -118,11 +120,33 @@
                                             </select>
 
                                         </div>
+                                        <div class="form-group">
+                                            <label> Audit Primary Department </label>
+                                                <select class="form-control" name="AuditPrimaryDepartment" id="AuditPrimaryDepartment" placeholder="">
+                                                    
+                                                    @foreach (var item in primaryDep)
+                                                    {
+                                                        <option value="@item.DepartmentID">@item.DepartmentName</option>
+                                                    }
+                                                </select>
+
+                                        </div>
+                                        <div class="form-group">
+                                            <label> Audit Secondary Department </label>
+                                                <select class="form-control select2" multiple="multiple" style="width: 100%;" name="AuditSecondaryDepartment" id="AuditSecondaryDepartment" >
+                                                    @*<option value="">---Select a department---</option>*@
+                                                    @foreach (var item in secondaryDep)
+                                                    {
+                                                        <option value="@item.DepartmentID">@item.DepartmentName</option>
+                                                    }
+                                                </select>
+
+                                        </div>
                                     </form>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary" onclick="SaveData()">Save changes</button>
+                                    <button type="button" class="btn btn-primary" onclick="SaveDataAuditRiskItem()">Save changes</button>
                                 </div>
                             </div>
                             <!-- /.modal-content -->
@@ -138,6 +162,12 @@
 @section Scripts
 {
     <script src="~/Content/adminlte/js/auditscipt.js"></script>
+    <script>
+        $(document).ready(function () {
+            //Initialize Select2 Elements
+            $('.select2').select2()
+        });
+    </script>
 }
 
 
